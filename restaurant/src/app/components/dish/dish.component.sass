@@ -1,0 +1,84 @@
+@import '../../../styles'
+
+.dish_wrapper
+    width: 35vw
+    max-width: 600px
+    border: 1px solid rgba(0,0,0,0.3)
+    border-radius: 15px
+    padding: 0.5rem
+    box-shadow: 5px 5px 10px rgba(255,255,255,0.4)
+    background-color: $card-bg
+    position: relative
+    margin: 1rem
+    overflow: hidden
+
+.dish_desc
+    margin-top: 1rem
+
+.dish_main_img
+
+    img 
+        width: 250px
+        height: 250px
+        object-fit: cover
+
+.dish_wrapper h3 
+    color: $card-font
+    font-weight: bolder
+    margin-top: 0.25rem
+    margin-bottom: 0.25rem
+
+.dish_wrapper h3:nth-child(2)
+    color: black
+
+.flex_center_row 
+    h3
+        margin-left: 0.5rem
+        margin-right: 0.5rem
+
+.extending_list
+    margin-top: 0.5rem
+    margin-bottom: 0.5rem
+
+    li 
+        font-weight: bolder
+
+.extend_list_btn:hover
+    cursor: pointer
+
+.decrease_order_size
+    position: absolute
+    left: 2.5%
+    top: 65%
+    transform: translateY(-65%)
+
+.increase_order_size
+    position: absolute
+    right: 2.5%
+    top: 65%
+    transform: translateY(-65%)
+
+.decrease_order_size:hover, .increase_order_size:hover 
+    cursor: pointer
+
+.decrease_order_size, .increase_order_size
+    height: 4.5rem
+    width: 4.5rem
+
+@media all and (max-width: 1000px) 
+    .dish_wrapper
+        width: 40vw
+    .decrease_order_size, .increase_order_size
+        height: 3rem
+        width: 3rem
+
+
+@media all and (max-width: 725px) 
+    .dish_wrapper
+        width: 65vw
+
+
+@media all and (max-width: 500px) 
+    .dish_wrapper
+        width: 90vw
+    

@@ -1,0 +1,45 @@
+<div class="dish_wrapper flex_center_col" [style.border]=" dish_object.price > 26 ? '3px solid lightgreen' : '3px solid red' ">
+    <div class="dish_main_img flex_center_row">
+        <img src='{{ (dish_object.imgs_paths.length > 0) ? dish_object.imgs_paths[0] : "../../../assets/no_photo.png" }}' alt="Dish photo" />
+    </div>
+    <div class="dish_desc flex_center_col">
+        <div class="flex_center_row">
+            <h3>Nazwa dania:</h3>
+            <h3>{{dish_object.name | uppercase}}</h3>
+        </div>
+        <div class="flex_center_row">
+            <h3>Typ kuchni:</h3>
+            <h3>{{dish_object.cuisine_type | uppercase}}</h3>
+        </div>
+        <div class="flex_center_row">
+            <h3>Kategoria posiłku:</h3>
+            <h3>{{dish_object.category}}</h3>
+        </div>
+        <!-- rozwijalna lista -->
+        <div class="dish_param flex_center_col">
+            <h3>Lista składników:</h3>
+            <img src="../../../assets/bxs-down-arrow.svg" alt="Extend list icon" class="extend_list_btn" (click)="handleExtensionOfIngredientList()"  *ngIf="is_ingredient_list_extended == false" />
+            <img src="../../../assets/bxs-up-arrow.svg" alt="Extend list icon" class="extend_list_btn" (click)="handleExtensionOfIngredientList()"  *ngIf="is_ingredient_list_extended == true" />
+            <ul class="extending_list" *ngIf="is_ingredient_list_extended == true">
+                <li *ngFor="let ingredient of dish_object.ingredients">{{ingredient}}</li>
+            </ul>
+        </div>
+        <div class="flex_center_row">
+            <h3 *ngIf="currently_available > 0">Ilość dań dostępnych:</h3>
+            <h3 [style.color]="getFontColor()">{{ (currently_available > 0) ? currently_available : 'Danie niedostępne' }}</h3>
+        </div>
+        <div class="flex_center_row">
+            <h3>Cena posiłku:</h3>
+            <h3>{{ this.price_transforming_service.getPriceInUSD(dish_object.price) | currency:'USD '}}</h3>
+        </div>
+        <div class="flex_center_row">
+            <h3>Krótki opis:</h3>
+            <h3 style="font-weight: normal;font-size: 1rem;margin-top: 1rem;">{{dish_object.description}}</h3>
+        </div>
+        <div class="flex_center_row">
+            <button class="button_styled" (click)="removeFromMenu()">Usuń danie z menu</button>
+        </div>
+        <img *ngIf="dish_object.available_count > 0" src="../../../assets/bxs-minus-circle.svg" alt="Decrease number of order icon"  class="decrease_order_size" (click)="handleRemoveDishFromOrder()"/>
+        <img *ngIf="currently_available > 0" src="../../../assets/bxs-plus-circle.svg" alt="Increase number or order icon" class="increase_order_size" (click)="handleAddDishToOrder()"/>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="form_container">
+    <h2>Dodaj danie do menu</h2>
+    <form novalidate [formGroup]="myform">
+      
+          <div class="form-group">
+            <label>Nazwa dania</label>
+            <input type="text" class="form-control" formControlName="dish_name" required>
+          </div>
+      
+          <div class="form-group">
+            <label>Typ kuchni</label>
+            <select class="form-control" formControlName="cuisine_type" required>
+              <option value="">Wybierz typ</option>
+              <option *ngFor="let type of types_of_cuisine" [value]="type">{{type}}</option>
+            </select>
+          </div>
+       
+      
+        <div class="form-group">
+            <label>Kategoria posiłku</label>
+            <select class="form-control" formControlName="dish_category" required>
+              <option value="">Wybierz kategorię</option>
+              <option *ngFor="let category of categories_of_dishes" [value]="category">{{category}}</option>
+            </select>
+          </div>
+      
+        <div class="form-group">
+          <label>Lista składników</label>
+          <input type="text" class="form-control" formControlName="list_of_ingredients" required>
+        </div>
+    
+        <div class="form-group">
+            <label>Ilość dostępnych dań</label>
+            <input type="text" class="form-control" formControlName="number_of_available_dishes" required>
+        </div>
+    
+        <div class="form-group">
+            <label>Cena posiłku (PLN)</label>
+            <input type="text" class="form-control" formControlName="dish_price" required>
+        </div>
+    
+        <div class="form-group">
+            <label>Krótki opis</label>
+            <input type="text" class="form-control" formControlName="short_desc" required>
+        </div>
+    
+      </form>
+</div>
