@@ -14,6 +14,7 @@ export class DishComponent {
   is_ingredient_list_extended = false;
   order_count:number = 0;
   currently_available:number = 0;
+
   @Input() dish_object: any;
   @Input() object_index?:number;
 
@@ -89,5 +90,4 @@ export class DishComponent {
   {
     this.menu_data_service.removeDishFromMenu(this.dish_object);
   }
-
 }

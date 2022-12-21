@@ -22,6 +22,7 @@
             <img src="../../../assets/bxs-up-arrow.svg" alt="Extend list icon" class="extend_list_btn" (click)="handleExtensionOfIngredientList()"  *ngIf="is_ingredient_list_extended == true" />
             <ul class="extending_list" *ngIf="is_ingredient_list_extended == true">
                 <li *ngFor="let ingredient of dish_object.ingredients">{{ingredient}}</li>
+                <li *ngIf="dish_object.ingredients.length == 0">Brak informacji o składnikach</li>
             </ul>
         </div>
         <div class="flex_center_row">
@@ -32,14 +33,20 @@
             <h3>Cena posiłku:</h3>
             <h3>{{ this.price_transforming_service.getPriceInUSD(dish_object.price) | currency:'USD '}}</h3>
         </div>
-        <div class="flex_center_row">
+        <div class="flex_center_row" style="margin-top: 2rem;" >
             <h3>Krótki opis:</h3>
-            <h3 style="font-weight: normal;font-size: 1rem;margin-top: 1rem;">{{dish_object.description}}</h3>
+            <h3 style="font-weight: normal;font-size: 1.25rem;">{{(dish_object.description != null) ? dish_object.description : "Brak informacji"}}</h3>
         </div>
-        <div class="flex_center_row">
+
+        <app-star-rating [product_id]="dish_object.id">
+        </app-star-rating>
+
+        <div class="flex_center_row" >
             <button class="button_styled" (click)="removeFromMenu()">Usuń danie z menu</button>
         </div>
+
         <img *ngIf="dish_object.available_count > 0" src="../../../assets/bxs-minus-circle.svg" alt="Decrease number of order icon"  class="decrease_order_size" (click)="handleRemoveDishFromOrder()"/>
+
         <img *ngIf="currently_available > 0" src="../../../assets/bxs-plus-circle.svg" alt="Increase number or order icon" class="increase_order_size" (click)="handleAddDishToOrder()"/>
     </div>
 </div>

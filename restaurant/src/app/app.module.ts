@@ -7,6 +7,7 @@ import { DishesComponent } from './components/dishes/dishes.component';
 import { DishComponent } from './components/dish/dish.component';
 import { AddDishComponent } from './components/add-dish/add-dish.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StarRatingComponent } from './components/star-rating/star-rating.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AppComponent,
     DishesComponent,
     DishComponent,
-    AddDishComponent
+    AddDishComponent,
+    StarRatingComponent
   ],
   imports: [
     BrowserModule,

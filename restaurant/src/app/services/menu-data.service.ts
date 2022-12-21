@@ -25,6 +25,18 @@ export class MenuDataService {
   addDishToMenu(dish_to_add: Dish)
   {
     this.menu_dishes.push(dish_to_add);
+    console.log("Dishes all: ");
+    console.log(this.menu_dishes);
+  }
+
+  getLastId() 
+  {
+    if(this.menu_dishes.length > 0)
+    {
+      return this.menu_dishes[this.menu_dishes.length-1].id;
+    }
+
+    return -1;
   }
 
 }

@@ -1,0 +1,12 @@
+<div class="row">
+    <div class="col-sm-12">
+        <ul class="list-inline rating-list" *ngFor="let star of stars; let i= index" style="display: inline-block"> 
+            <li (click)="countStarAndRate(star)" id="{{'starId'+i+product_id}}" [ngClass]="{'selected': (star <= selectedValue)}" 
+             (mouseover)="addClass(star)" (mouseout)="removeClass(star)"> ★
+            </li>
+        </ul>
+    </div>
+</div>
+<div  class="col-sm-12" *ngIf="selectedValue != 0" class="flex_center_row" style="color: green;font-weight: bold;">
+    Dziękujemy za ocenę!
+</div>
