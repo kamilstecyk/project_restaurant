@@ -11,7 +11,7 @@ $card-font: #704045
     outline: 0
 
 html, :root
-    font-size: 11px
+    font-size: 14px
 
 body 
     background-color: $bg-primary
@@ -27,9 +27,20 @@ body
     align-items: center
     flex-direction: column
 
+.flex_start_row
+    display: flex 
+    justify-content: start 
+    align-items: center 
+
+.flex_space_evenly_row
+    display: flex
+    justify-content: space-evenly
+    align-items: center
+
 .button_styled
-    padding: 0.5rem
-    margin: 2rem
+    padding: 1.5rem
+    margin: 1rem
+    font-size: 1.4rem
     background-color: $bg-primary
     font-weight: bold
     transition: all 0.3s ease-in-out
@@ -38,3 +49,72 @@ body
         cursor: pointer
         background-color: black
         color: $bg-primary
+
+
+/* CSS to change Default/'Accent' color */
+
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb 
+    background-color: red 
+
+
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar 
+    background-color: red  
+
+
+/* CSS to change 'Primary' color */
+
+::ng-deep .mat-slide-toggle.mat-primary.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb 
+    background-color: red
+
+
+::ng-deep .mat-slide-toggle.mat-primary.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar 
+    background-color: #ff99ff
+
+
+/* CSS to change 'Warn' color */
+
+::ng-deep .mat-slide-toggle.mat-warn.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb 
+    background-color: red
+
+
+::ng-deep .mat-slide-toggle.mat-warn.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar 
+    background-color: #ffe066
+
+.closed
+    height: 0px
+    visibility: hidden
+
+.myactive 
+    position: relative
+    font-weight: bold
+    
+    &::after 
+        position: absolute
+        left: 0
+        bottom: -2px
+        content: ''
+        height: 10%
+        width: 100%
+        background-color: black
+    
+    .inactive_btn
+        visibility: hidden
+
+.button 
+    padding: 1rem
+    font-size: 1.5rem
+
+.form_styled
+    border: 1px solid rgba(0,0,0,0.4)
+    background-color: rgba(0,0,0,0.15)
+    border-radius: 15px 15px 0px 0px
+
+.form_part
+    width: 50vw
+
+@media screen and (max-width: 600px) 
+    .button 
+        padding: 0.75rem 
+        font-size: 1.25rem
+
+    

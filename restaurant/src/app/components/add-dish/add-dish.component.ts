@@ -9,7 +9,6 @@ import { MenuDataService } from 'src/app/services/menu-data.service';
   selector: 'app-add-dish',
   templateUrl: './add-dish.component.html',
   styleUrls: ['./add-dish.component.sass'],
-  providers: [ MenuDataService ]
 })
 export class AddDishComponent {
   types_of_cuisine: string[] = cuisine_types;

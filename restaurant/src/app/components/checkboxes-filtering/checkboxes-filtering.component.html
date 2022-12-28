@@ -1,0 +1,15 @@
+<div class="filter_type">
+    <div class="flex_center_row">
+        <h3>{{category}}</h3>
+        <img class="ms-4" src="../../../assets/bxs-down-arrow.svg" alt="Extend icon" (click)="handleClickBtnExtending()" *ngIf="is_extended == false"/>
+        <img class="ms-4" src="../../../assets/bxs-up-arrow.svg" alt="Extend icon" (click)="handleClickBtnExtending()" *ngIf="is_extended == true"/>
+    </div>
+    <div class="checkboxes {{ !(is_extended == true) ? 'closed' : ''}}" id="{{ 'checkboxes_' + removeSpaces(category) }}">
+        <div class="form-check" *ngFor="let value of data, let index = index">
+            <input class="form-check-input" type="checkbox" value="{{value}}" id="{{(removeSpaces(category) + index)}}" (input)="handleClickChechbox()">
+            <label class="form-check-label" for="{{(removeSpaces(category) + index)}}">
+              {{value}}
+            </label>
+          </div>
+    </div>
+</div>

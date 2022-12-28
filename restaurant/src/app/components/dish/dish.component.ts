@@ -2,13 +2,11 @@ import { Component } from '@angular/core'
 import { Input } from '@angular/core';
 import { PriceTransformingService } from 'src/app/services/price-transforming.service';
 import { MenuDataService } from 'src/app/services/menu-data.service';
-import { Dish } from 'src/app/dishes';
-
+import { ShoppingCartService } from 'src/app/services/shopping-cart.service';
 @Component({
   selector: 'app-dish',
   templateUrl: './dish.component.html',
   styleUrls: ['./dish.component.sass'],
-  providers: [ PriceTransformingService, MenuDataService ]
 })
 export class DishComponent {
   is_ingredient_list_extended = false;
@@ -18,7 +16,7 @@ export class DishComponent {
   @Input() dish_object: any;
   @Input() object_index?:number;
 
-  constructor(public price_transforming_service: PriceTransformingService, private menu_data_service: MenuDataService)
+  constructor(public price_transforming_service: PriceTransformingService, private menu_data_service: MenuDataService, private shooping_cart_service: ShoppingCartService)
   {
   }
 
@@ -49,6 +47,7 @@ export class DishComponent {
     if(this.currently_available > 0)
     {
       ++this.order_count;
+      this.shooping_cart_service.increaseDishOrder(this.dish_object);
       --this.currently_available;
     }
     else 
@@ -62,6 +61,7 @@ export class DishComponent {
     if(this.order_count > 0)
     {
       --this.order_count;
+      this.shooping_cart_service.decreaseDishOrder(this.dish_object);
       ++this.currently_available;
     }
     else
@@ -89,5 +89,6 @@ export class DishComponent {
   removeFromMenu()
   {
     this.menu_data_service.removeDishFromMenu(this.dish_object);
+    this.shooping_cart_service.removeFromCartIfThisDishHasBeenRemovedFromMenu(this.dish_object);
   }
 }

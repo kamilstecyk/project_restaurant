@@ -3,7 +3,7 @@
 .dish_wrapper
     width: 35vw
     max-width: 600px
-    min-height: 90vh
+    min-height: 70vh
     border: 1px solid rgba(0,0,0,0.3)
     border-radius: 15px
     padding: 0.5rem
@@ -12,15 +12,13 @@
     position: relative
     margin: 2rem
     overflow: hidden
-
-.dish_desc
-    margin-top: 1rem
+    margin-top: 4rem
 
 .dish_main_img
-
+    margin-bottom: 1rem
     img 
-        width: 250px
-        height: 250px
+        width: 350px
+        height: 300px
         object-fit: cover
 
 .dish_wrapper h3 
@@ -48,34 +46,20 @@ li
 .extend_list_btn:hover
     cursor: pointer
 
-.decrease_order_size
-    position: absolute
-    left: 2.5%
-    top: 65%
-    transform: translateY(-65%)
-
-.increase_order_size
-    position: absolute
-    right: 2.5%
-    top: 65%
-    transform: translateY(-65%)
-
 .decrease_order_size:hover, .increase_order_size:hover 
     cursor: pointer
 
 .decrease_order_size, .increase_order_size
-    height: 4.5rem
-    width: 4.5rem
+    height: 6rem
+    width: 6rem
+    margin: 2rem
 
 @media all and (max-width: 1000px) 
     .dish_wrapper
         width: 40vw
-    .decrease_order_size, .increase_order_size
-        height: 3rem
-        width: 3rem
 
 
-@media all and (max-width: 725px) 
+@media all and (max-width: 855px) 
     .dish_wrapper
         width: 65vw
 

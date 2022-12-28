@@ -1,0 +1,101 @@
+
+<div style="margin-top: 15rem;">
+    <section class="section-pagetop bg mt-5">
+        <div class="container {{!is_shopping_cart_extended ? 'text-center' : ''}}">
+            <h1 class="title-page">Koszyk z zakupami</h1>
+        </div> <!-- container //  -->
+    </section>
+        <!-- ========================= SECTION INTRO END// ========================= -->
+        
+        <!-- ========================= SECTION CONTENT ========================= -->
+    <section class="section-content padding-y">
+        <div class="container">
+        
+        <div class="row mt-3 {{!is_shopping_cart_extended ? 'flex_center_row' : ''}}" >
+            <main class="col-md-9" *ngIf="is_shopping_cart_extended == true">
+        <div class="card">
+        
+        <table class="table table-borderless table-shopping-cart" >
+        <thead class="text-muted">
+        <tr class="small text-uppercase">
+        <th scope="col" class="h4">Dania</th>
+        <th scope="col" width="120" class="h4">Ilość</th>
+        <th scope="col" width="120" class="h4">Cena</th>
+        <th scope="col" class="text-right" width="200"> </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let record of this.ordered_dishes">
+            <td>
+                <figure class="itemside">
+                    <div class="aside"><img src="{{ (record.dish.imgs_paths.length == 0) ? '../../../assets/no_photo.png' : record.dish.imgs_paths[0]}}" class="img-sm" style="width: 100px;height: 100px;"></div>
+                    <figcaption class="info">
+                        <a href="#" class="title text-dark">{{record.dish.name}}</a>
+                        <p class="text-muted small">Kuchnia: {{record.dish.cuisine_type}} <br> Kategoria: {{record.dish.category}}</p>
+                    </figcaption>
+                </figure>
+            </td>
+            <td> 
+                <input class="form-control" disabled value="{{record.ordered_amount}}" />
+            </td>
+            <td> 
+                <div class="price-wrap"> 
+                    <var class="price">${{this.price_transforming_service.getPriceInUSD(record.dish.price * record.ordered_amount)}}</var> 
+                    <small class="text-muted"> ${{this.price_transforming_service.getPriceInUSD(record.dish.price)}} kazde </small> 
+                </div> <!-- price-wrap .// -->
+            </td>
+            <td class="text-right"> 
+            <a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light mr-2" data-toggle="tooltip"> <i class="fa fa-heart"></i></a> 
+            <a href="" class="btn btn-light"> Usuń</a>
+            </td>
+        </tr>
+        <div *ngIf="this.ordered_dishes.length == 0">
+            <h3>Brak dań w koszyku!</h3>
+        </div>
+        
+        </tbody>
+        </table>
+        
+        <!-- <div class="card-body border-top">
+            <a href="#" class="btn btn-primary float-md-right"> Kup <i class="fa fa-chevron-right"></i> </a>
+            <a href="#" class="btn btn-light"> <i class="fa fa-chevron-left"></i> Kontynuuj zakupy </a>
+        </div>   -->
+        </div> <!-- card.// -->
+        
+            </main> <!-- col.// -->
+            <aside class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                            <!-- <dl class="dlist-align">
+                            <dt>Total price:</dt>
+                            <dd class="text-right">USD 120</dd>
+                            </dl> -->
+                            <!-- <dl class="dlist-align">
+                            <dt>Discount:</dt>
+                            <dd class="text-right">USD 658</dd>
+                            </dl> -->
+                            <dl class="dlist-align text-center">
+                                <div class="flex_center_row">
+                                    <div class="flex_center_col">
+                                        <dt class="h2">Suma:</dt>
+                                        <dd class="text-right  h2"><strong>${{this.full_cost_of_order}}</strong></dd>
+                                    </div>
+                                    <div class="flex_center_col ms-5">
+                                        <button style="font-size: 1.8rem" class="btn btn-danger btn-sm" (click)="handleExtendingBtn()"> {{ !is_shopping_cart_extended ? 'Rozwiń koszyk &#8595;' : 'Zwiń koszyk &#8593;' }}</button>
+                                    </div>
+                                </div>
+                            </dl>
+                            <hr>
+                            <p class="text-center mb-3">
+                                <img src="../../../assets/icons8-card-payment-100.png">
+                            </p>
+                            
+                    </div> <!-- card-body.// -->
+                </div>  <!-- card .// -->
+            </aside> <!-- col.// -->
+        </div>
+        
+        </div> <!-- container .//  -->
+    </section>
+</div>

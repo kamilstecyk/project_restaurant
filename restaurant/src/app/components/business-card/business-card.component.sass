@@ -1,0 +1,126 @@
+.wrapper
+    width: 100vw
+    height: 95vh
+    background-image: url('../../../assets/restaurant.jpg')
+    background-color: black
+    mix-blend-mode: darken
+    background-repeat: no-repeat
+    background-size: cover
+
+.contact_card
+    position: absolute
+    top: 50%
+    left: 10%
+    transform: translate(-10%, -50%)
+    min-height: 30vh
+    min-width: 30vw
+
+.contact_div 
+    background-color: black
+    margin: 0.5rem
+    padding: 1rem
+    transition: all 0.3s ease-in-out
+
+    a 
+        text-decoration: none
+        color: white
+        font-size: 1.5rem
+        width: 100%
+        height: 100%
+        display: block
+        transition: all 0.3s ease-in-out
+        
+        &:hover 
+            color: black
+
+    &:hover 
+        background-color: white 
+        border: 1px solid black
+
+.circle
+    width: 75px
+    height: 75px
+    background-color: black
+    border-radius: 50%
+    margin: 1rem
+    position: relative
+    transition: all 0.25s ease-in-out
+
+    a 
+        height: 100%
+        width: 100%
+        display: flex
+        justify-content: center
+        align-items: center
+
+    img 
+        filter: invert(100%)
+        width: 50%
+        height: 50%
+
+    &:hover 
+        transform: scale(1.1)
+        
+
+
+.map_img
+    position: absolute
+    top: 35%
+    right: 5%
+    max-width: 40vw
+    max-height: 50vh
+    transition: all 0.25s ease-in-out
+
+    img 
+        width: 100%
+        height: 100%
+
+    &::after 
+        transition: all 0.25s ease-in-out
+
+    &:hover 
+        transform: rotateY(15deg)
+        &::after 
+            content: 'Zobacz na mapie'
+            text-align: center
+            display: flex
+            align-items: center
+            justify-content: center
+            font-size: 2rem
+            color: black
+            font-weight: bold
+            background: rgba(0,0,0,0.6) 
+            position: absolute
+            top: 0
+            left: 0
+            width: 100%
+            height: 100%
+
+.contact_div 
+    & img 
+        filter: invert(100%)
+
+@media screen and (max-width: 600px)
+    .contact_card
+        top: 30%
+        left: 50%
+        transform: translate(-50%, -30%)
+        min-width: 90vw
+
+    .map_img
+        top: 85%
+        right: 50%
+        transform: translate(50%, -85%)
+        width: 90vw
+        max-width:90vw
+        height: 20vh
+
+@media screen and (max-height: 900px)
+    .contact_card
+        top: 50%
+
+    .map_img
+        display: none
+
+    .map_link_phone
+        display: flex

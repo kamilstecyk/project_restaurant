@@ -1,4 +1,5 @@
+<app-filtering></app-filtering>
 <div class="dishes_container">
-    <app-dish *ngFor="let dish of dishes_data, let index = index" [dish_object]="dish" [object_index]="index">
+    <app-dish *ngFor="let dish of dishes_data | dishesFilter:this.cuisine_types_checked:'cuisine_type' | dishesFilter:this.dishes_categories_checked:'category' | minMaxFiltering:this.min_value_chosen:this.max_value_chosen, let index = index" [dish_object]="dish" [object_index]="index">
     </app-dish>
 </div>

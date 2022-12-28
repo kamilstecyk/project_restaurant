@@ -1,0 +1,16 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/" style="border-right: 3px solid rgba(0,0,0,0.3); padding-right: 0.5rem;">Do syta <img src="../../../assets/bx-fork.svg" alt="brand icon"/></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link" routerLinkActive="myactive" aria-current="page" routerLink="/" [routerLinkActiveOptions]="{exact: true}">Strona Główna</a>
+          <a class="nav-link" routerLinkActive="myactive" routerLink="/potrawy">Potrawy</a>
+          <a class="nav-link" routerLinkActive="myactive" routerLink="/koszyk">Koszyk</a>
+          <a class="nav-link" routerLinkActive="myactive" routerLink="/dodaj-danie" tabindex="-1">Dodaj Danie</a>
+        </div>
+      </div>
+    </div>
+  </nav>

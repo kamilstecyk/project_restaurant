@@ -1,0 +1,130 @@
+@import '../../../styles'
+
+.dish_wrapper
+    min-width: 40vw
+    max-width: 650px
+    min-height: 75vh
+    border: 1px solid rgba(0,0,0,0.3)
+    border-radius: 15px
+    padding: 0.5rem
+    box-shadow: 5px 5px 10px rgba(255,255,255,0.4)
+    background-color: $card-bg
+    position: relative
+    margin: 2rem
+    margin-bottom: 8rem
+
+.dish_desc
+    margin-top: 1rem
+
+.dish_main_img
+    img 
+        width: 250px
+        height: 250px
+        object-fit: cover
+
+.dish_wrapper h3 
+    color: $card-font
+    font-weight: bolder
+    margin-top: 0.25rem
+    margin-bottom: 0.25rem
+
+.dish_wrapper h3:nth-child(2)
+    color: black
+
+.flex_center_row 
+    h3
+        margin-left: 0.5rem
+        margin-right: 0.5rem
+
+.extending_list
+    margin-top: 0.5rem
+    margin-bottom: 0.5rem
+    
+li 
+    font-weight: bolder
+    font-size: 1.3rem
+
+.extend_list_btn:hover
+    cursor: pointer
+
+.decrease_order_size
+    width: 100px
+    height: 100px
+    margin: 1rem
+
+.increase_order_size
+    width: 100px
+    height: 100px
+    margin: 1rem
+
+.decrease_order_size:hover, .increase_order_size:hover 
+    cursor: pointer
+
+.decrease_order_size, .increase_order_size
+    height: 4.5rem
+    width: 4.5rem
+
+.form_part 
+    align-self: start
+
+.comments_box
+    max-height: 40vh
+    overflow-y: auto
+
+.slider_images
+    text-align: center
+    width: 100vw
+    margin:0
+    padding:0
+
+.start_part
+    height: 95vh
+    max-height: 95vh
+    display: flex 
+    flex-direction: column 
+    justify-content: center 
+
+@media all and (max-width: 1000px) 
+    .dish_wrapper
+        width: 40vw
+
+
+@media all and (max-width: 855px) 
+    .dish_wrapper
+        width: 65vw
+
+
+@media all and (max-width: 500px) 
+    .dish_wrapper
+        width: 90vw
+    
+@media all and (max-width: 1241px)
+    .wrapper
+        flex-direction: column
+    .form_part
+        width: 90vw!important
+        min-width: 90vw
+        align-self: center
+    .dish_wrapper
+        width: 90vw
+        margin-top: 5rem
+
+    .back_button
+        top: 13%
+        left: 50%
+        transform: translateX(-50%)
+
+    .header_title
+        flex-direction: column
+        margin-bottom: 5rem
+
+@media all and (max-width: 600px)
+    .dish_main_img
+
+        img 
+            width: 150px
+            height: 150px
+            object-fit: cover
+
+    .button_styled
+        margin-top: 0rem

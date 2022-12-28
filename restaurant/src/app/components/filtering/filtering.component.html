@@ -1,0 +1,32 @@
+<div class="container text-center mt-5">
+    <div class="flex_center_row filter_dishes" (click)="handleExtendingFilteringParameters()">
+      <h2 class="pt-4 pb-4">Filtruj dania</h2>
+      <img class="ms-4" src="../../../assets/bx-filter-alt.svg" alt="Filter icon" />
+    </div>
+    <div class="row mb-5 {{ !this.is_extended_filter_section ? 'closed' : '' }}">
+        <div class="card">
+            <div class="card-body">
+              <app-checkboxes-filtering [data]="this.cuisine_types" [category]="'Typ kuchni'" (checked_changed)="handleCheckboxesCuisineType($event)"></app-checkboxes-filtering>
+              <app-checkboxes-filtering [data]="this.dish_categories" [category]="'Kategoria posiłku'" (checked_changed)="handleCheckBoxesDishCategory($event)"></app-checkboxes-filtering>
+              <div class="filter_type flex_center_col">
+                <h3>Zakres cenowy</h3>
+                <div class="range_values flex_center_row">
+                  <div class="range_value">
+                    <h3>Min: </h3>
+                    <h3>{{value_min}} PLN</h3>
+                  </div>
+                  <div class="range_value">
+                    <h3>Max: </h3>
+                    <h3>{{value_max}} PLN</h3>
+                  </div>
+                </div>
+                <mat-slider min="{{this.menu_data_service.getMinDishPrice()}}" max="{{this.menu_data_service.getMaxDishPrice()}}" color="primary">
+                  <input value="{{this.menu_data_service.getMinDishPrice()}}" matSliderStartThumb [(ngModel)]="value_min" (change)="handleMinPriceDish()">
+                  <input value="{{this.menu_data_service.getMaxDishPrice()}}" matSliderEndThumb [(ngModel)]="value_max" (change)="handleMaxPriceDish()">
+                </mat-slider>
+              </div>
+              <app-checkboxes-filtering [data]="this.rating_stars" [category]="'Ocena dania'" (checked_changed)="handleCheckboxesStars($event)"></app-checkboxes-filtering>
+            </div>
+          </div>
+    </div>
+</div>
