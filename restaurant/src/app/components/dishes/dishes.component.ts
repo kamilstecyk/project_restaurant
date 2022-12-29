@@ -3,6 +3,7 @@ import { DishesFilterPipe } from 'src/app/Pipes/dishes-filter.pipe';
 import { FilteringService } from 'src/app/services/filtering.service';
 import { MenuDataService } from 'src/app/services/menu-data.service';
 import { Dish } from 'src/app/dishes';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-dishes',
@@ -27,6 +28,11 @@ export class DishesComponent {
 
   max_value_chosen: number = 100;
   max_value_chosen_subscription: any;
+
+  pageIndex:number = 0;
+  pageSize:number = 50;
+  lowValue:number = 0;
+  highValue:number = 50;
 
   // TODO 
   // star rating filtering 
@@ -85,4 +91,17 @@ export class DishesComponent {
      this.max_value_chosen_subscription.unsubscribe();
      this.current_dishes_data_subscirption.unsubscribe();
    }
+
+   getPaginatorData(event:any){
+    console.log(event);
+    if(event.pageIndex === this.pageIndex + 1){
+       this.lowValue = this.lowValue + this.pageSize;
+       this.highValue =  this.highValue + this.pageSize;
+      }
+   else if(event.pageIndex === this.pageIndex - 1){
+      this.lowValue = this.lowValue - this.pageSize;
+      this.highValue =  this.highValue - this.pageSize;
+     }   
+      this.pageIndex = event.pageIndex;
+  }
 }

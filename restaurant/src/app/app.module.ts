@@ -18,6 +18,7 @@ import { BusinessCardComponent } from './components/business-card/business-card.
 import { MenuComponent } from './components/menu/menu.component';
 import { DishDetailsComponent } from './components/dish-details/dish-details.component';
 import { NgImageSliderModule } from 'ng-image-slider';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { NgImageSliderModule } from 'ng-image-slider';
     FormsModule,
     ReactiveFormsModule,
     MatSliderModule,
-    NgImageSliderModule
+    NgImageSliderModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

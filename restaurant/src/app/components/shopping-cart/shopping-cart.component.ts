@@ -34,4 +34,9 @@ export class ShoppingCartComponent {
     //prevent memory leak when component destroyed
     this.ordered_dishes_subscription.unsubscribe();
    }
+
+   deleteFromCartDish(id:number)
+   {
+      this.shopping_cart_service.deleteFromShoppingCartDish(id);
+   }
 }

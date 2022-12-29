@@ -62,10 +62,9 @@
         transform: scale(1.1)
         
 
-
 .map_img
     position: absolute
-    top: 35%
+    top: 28%
     right: 5%
     max-width: 40vw
     max-height: 50vh
@@ -100,6 +99,9 @@
     & img 
         filter: invert(100%)
 
+.map_link_phone
+    display: none
+
 @media screen and (max-width: 600px)
     .contact_card
         top: 30%
@@ -107,15 +109,7 @@
         transform: translate(-50%, -30%)
         min-width: 90vw
 
-    .map_img
-        top: 85%
-        right: 50%
-        transform: translate(50%, -85%)
-        width: 90vw
-        max-width:90vw
-        height: 20vh
-
-@media screen and (max-height: 900px)
+@media screen and (max-height: 900px ) and (max-width: 800px)
     .contact_card
         top: 50%
 

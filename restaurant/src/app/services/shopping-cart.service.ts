@@ -85,4 +85,46 @@ export class ShoppingCartService {
     }
     this.dishes_in_shopping_cart.next(this.ordered_dishes);
   }
+
+  getDishAvailableCountFromId(id: number)
+:number  {
+    for(var record of this.ordered_dishes)
+    {
+      if(record.dish.id == id)
+      {
+        console.log(record.dish.available_count - record.ordered_amount +  " passing value");
+        console.log("hellllllo")
+        return record.dish.available_count - record.ordered_amount;
+      }
+    }
+
+    return -1;
+  }
+
+  getHowManyOrderedFromId(id: number):number
+  {
+    for(var record of this.ordered_dishes)
+    {
+      if(record.dish.id == id)
+      {
+        return record.ordered_amount;
+      }
+    }
+
+    return 0;
+  }
+
+  deleteFromShoppingCartDish(id:number)
+  {
+    this.ordered_dishes.forEach((record,index)=>
+    {
+      if(record.dish.id == id)
+      {
+        this.ordered_dishes.splice(index,1);
+        this.dishes_in_shopping_cart.next(this.ordered_dishes);
+        console.log("REmoved from cart")
+        console.log(this.ordered_dishes);
+      }
+    });
+  }
 }

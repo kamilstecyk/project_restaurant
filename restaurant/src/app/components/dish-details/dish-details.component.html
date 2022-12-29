@@ -67,11 +67,15 @@
         <form class="mt-4 text-start form_styled">
             <div class="form-group m-3">
               <label class="h3 mb-2" for="exampleFormControlInput1">Nick</label>
-              <input type="text" class="form-control form-control-lg" id="nick_input" placeholder="nazwa uzytkownika">
+              <input type="text" class="form-control form-control-lg" id="nick_input" placeholder="nazwa uzytkownika" required>
+            </div>
+            <div class="form-group m-3">
+              <label class="h3 mb-2" for="exampleFormControlInput1">Data zakupu</label>
+              <input type="date" class="form-control form-control-lg" id="date_input" >
             </div>
             <div class="form-group m-3">
               <label class="h3 mb-2" for="exampleFormControlTextarea1">Wpisz treść swojej recenzji (minimum 50 znaków)</label>
-              <textarea class="form-control form-control-lg" id="review_textarea_input" rows="3"></textarea>
+              <textarea class="form-control form-control-lg" id="review_textarea_input" rows="3" required></textarea>
             </div>
             <button type="submit" class="btn btn-danger btn-lg w-100 mt-4" style="font-size:1.4rem">Dodaj opinię</button>        
         </form>
@@ -82,11 +86,11 @@
                 <div class="card-body p-4">
                   <div class="card mb-4">
                     <div class="card-body">
-                      <p>Type your note, and hit enter to add it</p>
+                      <p class="h4">Type your note, and hit enter to add it</p>
           
                       <div class="d-flex justify-content-between">
                         <div class="d-flex flex-row align-items-center">
-                          <p class="small mb-0 ms-2">Martha</p>
+                          <p class="h4 mb-0 ms-2">Martha</p>
                         </div>
                       </div>
                     </div>

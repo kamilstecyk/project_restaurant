@@ -33,11 +33,25 @@ export class DishDetailsComponent {
         {
           for(var i = 0; i<10; ++i)
           {
-            var img_object = {image: img_path, thumbImage: img_path, title: this.dish_object?.name};
+            var img_object = {image: img_path, thumbImage: img_path};
             this.imagesObjectArray.push(img_object);
           }
         });
       }
+  }
+
+  ngOnInit()
+  {
+    if(this.dish_object != null)
+    {
+      this.currently_available = this.shooping_cart_service.getDishAvailableCountFromId(this.dish_object.id);
+      if(this.currently_available == -1 )
+      {
+        this.currently_available = this.dish_object.available_count;
+      }
+
+      this.order_count = this.shooping_cart_service.getHowManyOrderedFromId(this.dish_object.id);
+    }
   }
 
   handleExtensionOfIngredientList()

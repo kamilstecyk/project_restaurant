@@ -12,7 +12,7 @@
         <div class="container">
         
         <div class="row mt-3 {{!is_shopping_cart_extended ? 'flex_center_row' : ''}}" >
-            <main class="col-md-9" *ngIf="is_shopping_cart_extended == true">
+            <main class="col-md-8" *ngIf="is_shopping_cart_extended == true">
         <div class="card">
         
         <table class="table table-borderless table-shopping-cart" >
@@ -31,8 +31,8 @@
                 <figure class="itemside">
                     <div class="aside"><img src="{{ (record.dish.imgs_paths.length == 0) ? '../../../assets/no_photo.png' : record.dish.imgs_paths[0]}}" class="img-sm" style="width: 100px;height: 100px;"></div>
                     <figcaption class="info">
-                        <a href="#" class="title text-dark">{{record.dish.name}}</a>
-                        <p class="text-muted small">Kuchnia: {{record.dish.cuisine_type}} <br> Kategoria: {{record.dish.category}}</p>
+                        <a [routerLink]="['/szczegoly-dania', record.dish.id]" class="title text-dark" style="font-size:1.4rem">{{record.dish.name}}</a>
+                        <p class="text-muted small" style="font-size:1.2rem">Kuchnia: {{record.dish.cuisine_type}} <br> Kategoria: {{record.dish.category}}</p>
                     </figcaption>
                 </figure>
             </td>
@@ -41,13 +41,13 @@
             </td>
             <td> 
                 <div class="price-wrap"> 
-                    <var class="price">${{this.price_transforming_service.getPriceInUSD(record.dish.price * record.ordered_amount)}}</var> 
+                    <var class="price h5">${{this.price_transforming_service.getPriceInUSD(record.dish.price * record.ordered_amount)}}</var> 
                     <small class="text-muted"> ${{this.price_transforming_service.getPriceInUSD(record.dish.price)}} kazde </small> 
                 </div> <!-- price-wrap .// -->
             </td>
             <td class="text-right"> 
             <a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light mr-2" data-toggle="tooltip"> <i class="fa fa-heart"></i></a> 
-            <a href="" class="btn btn-light"> Usuń</a>
+            <button class="btn btn-light" (click)="deleteFromCartDish(record.dish.id)"> Usuń</button>
             </td>
         </tr>
         <div *ngIf="this.ordered_dishes.length == 0">
@@ -64,7 +64,7 @@
         </div> <!-- card.// -->
         
             </main> <!-- col.// -->
-            <aside class="col-md-3">
+            <aside class="col-md-4">
                 <div class="card">
                     <div class="card-body">
                             <!-- <dl class="dlist-align">
