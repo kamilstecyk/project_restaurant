@@ -19,7 +19,7 @@ import { MenuComponent } from './components/menu/menu.component';
 import { DishDetailsComponent } from './components/dish-details/dish-details.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import {MatPaginatorModule} from '@angular/material/paginator';
-
+import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,7 +43,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     ReactiveFormsModule,
     MatSliderModule,
     NgImageSliderModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    NgxPaginationModule
   ],
   providers: [],
   bootstrap: [AppComponent]

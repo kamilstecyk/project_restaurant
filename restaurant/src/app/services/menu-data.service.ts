@@ -10,6 +10,12 @@ export class MenuDataService {
   private menu_dishes: Array<Dish> = dishes;
   private current_menu_dishes = new ReplaySubject(1);
 
+  current_cuisine_types = new ReplaySubject(1);
+  current_categories_of_dishes = new ReplaySubject(1);
+  current_min_price_of_dish = new ReplaySubject(1);
+  current_max_price_of_dish = new ReplaySubject(1);
+  current_number_of_dishes = new ReplaySubject(1);
+
   // filtering data
   private types_of_cuisine: Array<string> = []
   private max_price: number = -10000;
@@ -18,12 +24,36 @@ export class MenuDataService {
 
   constructor() 
   {
+    this.getAndSendDataToSubjects();
+
+    console.log(this.menu_dishes);
+  }
+
+  getAndSendDataToSubjects()
+  {
+    this.resetParametersOfFiltering()
+
     this.getCuisineTypes();
     this.getMaxAndMinPrice();
     this.getCategories();
 
+    this.current_cuisine_types.next(this.types_of_cuisine);
+    this.current_categories_of_dishes.next(this.categories_of_dishes);
+    this.current_min_price_of_dish.next(this.min_price);
+    this.current_max_price_of_dish.next(this.max_price);
+    this.current_number_of_dishes.next(this.menu_dishes.length);
+
     this.current_menu_dishes.next(this.menu_dishes);
+    console.log("Table at the end: ");
     console.log(this.menu_dishes);
+  }
+
+  resetParametersOfFiltering()
+  {
+    this.types_of_cuisine.splice(0);
+    this.max_price = -10000;
+    this.min_price = 10000;
+    this.categories_of_dishes.splice(0);
   }
 
   private getCuisineTypes()
@@ -111,7 +141,7 @@ export class MenuDataService {
       }
     });
 
-    this.current_menu_dishes.next(this.menu_dishes);
+    this.getAndSendDataToSubjects();
   }
 
   addDishToMenu(dish_to_add: Dish)
@@ -119,7 +149,7 @@ export class MenuDataService {
     this.menu_dishes.push(dish_to_add);
     console.log("Dishes all: ");
     console.log(this.menu_dishes);
-    this.current_menu_dishes.next(this.menu_dishes);
+    this.getAndSendDataToSubjects();
   }
 
   getLastId() 

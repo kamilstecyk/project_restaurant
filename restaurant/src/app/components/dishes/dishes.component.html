@@ -1,11 +1,24 @@
-<app-filtering></app-filtering>
-<div class="dishes_container">
-    <app-dish *ngFor="let dish of dishes_data | dishesFilter:this.cuisine_types_checked:'cuisine_type' | dishesFilter:this.dishes_categories_checked:'category' | minMaxFiltering:this.min_value_chosen:this.max_value_chosen, let index = index" [dish_object]="dish" [object_index]="index">
-    </app-dish>
+<div class="flex_center_col" style="min-height: 90vh;">
+    <app-filtering></app-filtering>
+    <div class="dishes_container">
+        <app-dish *ngFor="let dish of (dishes_data | dishesFilter:this.cuisine_types_checked:'cuisine_type' | dishesFilter:this.dishes_categories_checked:'category' | minMaxFiltering:this.min_value_chosen:this.max_value_chosen) | paginate: { itemsPerPage: tableSize,
+            currentPage: page }, let index = index" [dish_object]="dish" [object_index]="index"> 
+        </app-dish>
+    </div>
+    <div class="flex_center_col">
+        <pagination-controls
+                (pageChange)="handlePageChange($event)"
+                [responsive]="true"
+                previousLabel="Previous"
+                nextLabel="Next" >
+        </pagination-controls>
+        <div class="flex_center_row">
+            <h5 class="ms-3 me-2">    Items per Page:   </h5>
+            <select (change)="handlePageSizeChange($event)">
+            <option *ngFor="let size of tableSizes" [ngValue]="size" [selected]="size === this.tableSize">
+                {{ size }}
+            </option>
+            </select>
+        </div>
+    </div>
 </div>
-<mat-paginator [length]="100"
-              [pageSize]="10"
-              [pageSizeOptions]="[5, 10, 25, 100]"
-              aria-label="Select page">
-</mat-paginator>
-

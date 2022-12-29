@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
-import { DishesFilterPipe } from 'src/app/Pipes/dishes-filter.pipe';
 import { FilteringService } from 'src/app/services/filtering.service';
-import { MenuDataService } from 'src/app/services/menu-data.service';
 import { Dish } from 'src/app/dishes';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import { MenuDataService } from 'src/app/services/menu-data.service';
 
 @Component({
   selector: 'app-dishes',
@@ -29,52 +27,62 @@ export class DishesComponent {
   max_value_chosen: number = 100;
   max_value_chosen_subscription: any;
 
-  pageIndex:number = 0;
-  pageSize:number = 50;
-  lowValue:number = 0;
-  highValue:number = 50;
+  // paginator
+  page: number = 1;
+  count: number = 2;
+  tableSize: number = 2;
+  tableSizes: any = [1, 2, 3, 6, 9, 12];
+
+  fetchDishes(): void {
+    this.current_dishes_data_subscirption = this.menu_data_service.getDishes().subscribe((value) => 
+    {
+      this.dishes_data = Object.assign([], value) as  Array<Dish>;
+      this.count = this.dishes_data.length;
+      this.page = 1;
+    });
+  }
 
   // TODO 
   // star rating filtering 
   constructor(private menu_data_service:MenuDataService,  public filtering_service:FilteringService)
   {
-    this.current_dishes_data_subscirption = menu_data_service.getDishes().subscribe((value) => 
-    {
-            console.log(value + " - received");
-
-      this.dishes_data = Object.assign([], value) as  Array<Dish>;
-    });
+    this.fetchDishes();
+    this.min_value_chosen = this.menu_data_service.getMinDishPrice();
+    this.max_value_chosen = this.menu_data_service.getMaxDishPrice();
 
     this.cuisine_types_subscription = filtering_service.getCuisineTypes().subscribe(value=>
       {
-        this.cuisine_types_checked =  Object.assign([], value);
-        console.log("Changed - values: " + this.cuisine_types_checked);
-        // this.filtered_data = this.dishFilter.transform(this.dishes_data, value as string[], 'cuisine_type')
+        this.cuisine_types_checked =  Object.assign([], value);  
+        this.page = 1;    
     });
 
     this.dishes_categories_subscription = filtering_service.getDishesCategoryChecked().subscribe(value=>
       {
         this.dishes_categories_checked =  Object.assign([], value);
-        console.log("Changed - values: " + this.dishes_categories_checked);
+        this.page = 1;    
       });
 
     this.stars_rating_subscription = filtering_service.getStarsChosen().subscribe(value=>
       {
         this.stars_rating_checked =  Object.assign([], value);
         console.log("Changed - values: " + this.stars_rating_checked);
+        this.page = 1;    
     });
 
     this.min_value_chosen_subscription = filtering_service.getMinDishValue().subscribe(value=>
       {
         this.min_value_chosen =  value as number;
-        console.log("Changed - values: " + this.min_value_chosen);
+        this.page = 1;    
     });
 
     this.max_value_chosen_subscription = filtering_service.getMaxDishValue().subscribe(value=>
       {
         this.max_value_chosen =  value as number;
-        console.log("Changed - values: " + this.max_value_chosen);
+        this.page = 1;    
     });
+
+    var x = window.matchMedia("(max-width: 600px)")
+    this.changeItemsPerPageIfItIsPhone(x)
   } 
 
   ngOnInit()
@@ -92,16 +100,19 @@ export class DishesComponent {
      this.current_dishes_data_subscirption.unsubscribe();
    }
 
-   getPaginatorData(event:any){
-    console.log(event);
-    if(event.pageIndex === this.pageIndex + 1){
-       this.lowValue = this.lowValue + this.pageSize;
-       this.highValue =  this.highValue + this.pageSize;
-      }
-   else if(event.pageIndex === this.pageIndex - 1){
-      this.lowValue = this.lowValue - this.pageSize;
-      this.highValue =  this.highValue - this.pageSize;
-     }   
-      this.pageIndex = event.pageIndex;
+   handlePageChange(event: any) {
+    this.page = event;
+  }
+
+  handlePageSizeChange(event: any): void {
+    this.tableSize = event.target.value;
+    console.log("Table size --- " + event.target.value);
+    this.page = 1;
+  }
+
+  changeItemsPerPageIfItIsPhone(x:any) {
+    if (x.matches) { // If media query matches
+      this.tableSize = 1;
+    }
   }
 }

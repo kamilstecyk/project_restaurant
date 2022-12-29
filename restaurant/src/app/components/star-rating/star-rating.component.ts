@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
+import { RatingService, DishRatingRecord } from 'src/app/services/rating.service';
 
 @Component({
   selector: 'app-star-rating',
@@ -10,12 +11,38 @@ export class StarRatingComponent {
 
   stars: number[] = [1, 2, 3, 4, 5];
   selectedValue: number = 0;
+  number_of_reviews: number = 0;
   @Input() product_id:any;
+
+  current_rating_subscription: any;
+
+  constructor(private rating_service: RatingService)
+  {
+    this.current_rating_subscription = rating_service.getCurrentRatingDish().subscribe((value)=>
+    {
+      this.number_of_reviews = (value as DishRatingRecord).numberOfReviews;
+    });
+  }
+
+  ngAfterViewInit()
+  {
+    this.setInitialRating();
+  }
+
+  setInitialRating()
+  {
+    var rating_record_of_dish = this.rating_service.getCurrentRatingAndNumberOfRewivesOfDishFromId(this.product_id) as DishRatingRecord;
+
+    if(rating_record_of_dish != null)
+    {
+      this.addClass(rating_record_of_dish.averageStarRate);
+      this.number_of_reviews = rating_record_of_dish.numberOfReviews;
+    }
+  }
 
   countStarAndRate(star:any) {
     this.selectedValue = star;
-
-    // here we will have handling rate by backend 
+    this.rating_service.addDishRatingStar(this.selectedValue, this.product_id);
   }
 
   addClass(star:any) {
@@ -31,5 +58,10 @@ export class StarRatingComponent {
       ab = "starId" + i + this.product_id;
       document.getElementById(ab)?.classList.remove("selected");
     }
+  }
+
+  ngOnDestroy()
+  {
+    this.current_rating_subscription.unsubscribe();
   }
 }

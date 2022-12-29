@@ -14,8 +14,9 @@ export interface DishRecord
 export class ShoppingCartService {
   private ordered_dishes: DishRecord[] = []; 
   private dishes_in_shopping_cart = new ReplaySubject(1); // we only need last emmitted value when we aare not subscribed
+  private currently_all_ordered_dishes = new ReplaySubject(1);
 
-  constructor() { }
+  constructor(){}
 
   increaseDishOrder(dish: Dish)
   {
@@ -44,6 +45,7 @@ export class ShoppingCartService {
 
     console.log(this.ordered_dishes);
     this.dishes_in_shopping_cart.next(this.ordered_dishes);
+    this.currently_all_ordered_dishes.next(this.getAllOrdersCount());
   }
 
   decreaseDishOrder(dish: Dish)
@@ -64,6 +66,7 @@ export class ShoppingCartService {
     }
     console.log(this.ordered_dishes);
     this.dishes_in_shopping_cart.next(this.ordered_dishes);
+    this.currently_all_ordered_dishes.next(this.getAllOrdersCount());
   }
 
   getDishesInShoppingCart()
@@ -84,6 +87,7 @@ export class ShoppingCartService {
         })
     }
     this.dishes_in_shopping_cart.next(this.ordered_dishes);
+    this.currently_all_ordered_dishes.next(this.getAllOrdersCount());
   }
 
   getDishAvailableCountFromId(id: number)
@@ -122,9 +126,21 @@ export class ShoppingCartService {
       {
         this.ordered_dishes.splice(index,1);
         this.dishes_in_shopping_cart.next(this.ordered_dishes);
+        this.currently_all_ordered_dishes.next(this.getAllOrdersCount());
         console.log("REmoved from cart")
         console.log(this.ordered_dishes);
       }
     });
+  }
+
+  private getAllOrdersCount()
+  {
+    return this.ordered_dishes.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.ordered_amount, 0);
+  }
+
+  getAllCurrenlyOrderedDishesCount()
+  {
+    return this.currently_all_ordered_dishes;
   }
 }
