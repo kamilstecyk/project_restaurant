@@ -15,6 +15,7 @@ export class StarRatingComponent {
   @Input() product_id:any;
 
   current_rating_subscription: any;
+  was_rated = false;
 
   constructor(private rating_service: RatingService)
   {
@@ -43,6 +44,8 @@ export class StarRatingComponent {
   countStarAndRate(star:any) {
     this.selectedValue = star;
     this.rating_service.addDishRatingStar(this.selectedValue, this.product_id);
+    this.was_rated = true;
+    setTimeout(()=>{this.was_rated = false}, 1250);
   }
 
   addClass(star:any) {

@@ -64,24 +64,57 @@
     </div>
     <div class="container text-center form_part m-4">
         <h2>Wystaw recenzje dla tego dania</h2>
-        <form class="mt-4 text-start form_styled">
+        <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="(myform.controls['nick'].errors?.required || myform.controls['date'].errors?.required || myform.controls['review_content'].errors?.required) && this.sumbit_btn_was_clicked ">
+          Pola nie mogą być puste, uzupełnij je!
+        </div>
+        <form class="mt-4 text-start form_styled"  novalidate [formGroup]="myform" (ngSubmit)="onSubmit()" >
+            <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.nick.invalid && myform.controls.nick.dirty" > 
+                Niepoprawny nick lub pusty!
+            </div>
             <div class="form-group m-3">
               <label class="h3 mb-2" for="exampleFormControlInput1">Nick</label>
-              <input type="text" class="form-control form-control-lg" id="nick_input" placeholder="nazwa uzytkownika" required>
+              <input type="text" class="form-control form-control-lg p-2" id="nick_input" placeholder="nazwa uzytkownika" formControlName="nick" required>
+            </div>
+            <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.date.invalid && myform.controls.date.dirty" > 
+              Wybrana data jest niepoprawna, musi być nie pózniejsza niz dzis!
             </div>
             <div class="form-group m-3">
               <label class="h3 mb-2" for="exampleFormControlInput1">Data zakupu</label>
-              <input type="date" class="form-control form-control-lg" id="date_input" >
+              <input type="date" class="form-control form-control-lg pe-2" id="date_input" formControlName="date">
+            </div>
+            <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.review_content.invalid && myform.controls.review_content.dirty" > 
+              Pole musi zawierać więcej niz 50 znakow, ale mniej niz 500!
             </div>
             <div class="form-group m-3">
               <label class="h3 mb-2" for="exampleFormControlTextarea1">Wpisz treść swojej recenzji (minimum 50 znaków)</label>
-              <textarea class="form-control form-control-lg" id="review_textarea_input" rows="3" required></textarea>
+              <textarea class="form-control form-control-lg p-2" id="review_textarea_input" rows="3" formControlName="review_content" required></textarea>
             </div>
             <button type="submit" class="btn btn-danger btn-lg w-100 mt-4" style="font-size:1.4rem">Dodaj opinię</button>        
         </form>
 
-        <div class="row d-flex justify-content-center mt-5 comments_box">
-            <div class="col-md-12col-lg-10">
+        <div class="row d-flex justify-content-center mt-5 comments_box" >
+            <div class="col-md-12col-lg-10" *ngFor="let review of this.dish_reviews">
+              <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                <div class="card-body p-4">
+                  <div class="card mb-4">
+                    <div class="card-body">
+                      <p class="h4 p-2">{{ review.content }}</p>
+          
+                      <div class="d-flex justify-content-between mt-2">
+                        <div class="d-flex flex-row align-items-center">
+                          <p class="h4 mb-0 ms-2">{{review.nick}}&nbsp;<img src="../../../assets/bxs-user-pin.svg" alt="user icon"/></p>
+                        </div>
+                        <div class="h5 me-2">
+                          {{ review.date }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+           
+
+            <!-- <div class="col-md-12col-lg-10">
               <div class="card shadow-0 border" style="background-color: #f0f2f5;">
                 <div class="card-body p-4">
                   <div class="card mb-4">
@@ -96,8 +129,8 @@
                     </div>
                   </div>
               </div>
-            </div>
-            <div class="col-md-12col-lg-10">
+            </div> -->
+            <!-- <div class="col-md-12col-lg-10">
                 <div class="card shadow-0 border" style="background-color: #f0f2f5;">
                   <div class="card-body p-4">
                     <div class="card mb-4">
@@ -161,6 +194,6 @@
                     </div>
                 </div>
               </div>
-          </div>
+          </div> -->
     </div>
 </div>

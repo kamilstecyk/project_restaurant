@@ -10,6 +10,6 @@
         </div>
     </div>
 </div>
-<div  class="col-sm-12" *ngIf="selectedValue != 0" class="flex_center_row" style="color: green;font-weight: bold;">
+<div  class="col-sm-12 flex_center_row h4" style="color: green;font-weight: bold;" [style.visibility]="this.was_rated == true ? 'visible' : 'hidden'" >
     Dziękujemy za ocenę!
 </div>
