@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject,BehaviorSubject, ReplaySubject } from 'rxjs';
 import { dishes, Dish } from '../dishes';
+import { DishRecord } from './shopping-cart.service';
 
 @Injectable({
   providedIn: 'root'
@@ -44,8 +45,6 @@ export class MenuDataService {
     this.current_number_of_dishes.next(this.menu_dishes.length);
 
     this.current_menu_dishes.next(this.menu_dishes);
-    console.log("Table at the end: ");
-    console.log(this.menu_dishes);
   }
 
   resetParametersOfFiltering()
@@ -137,7 +136,7 @@ export class MenuDataService {
       if(item === dish_to_delete) 
       {
         this.menu_dishes.splice(index,1);
-        console.log("Usunieto!");
+        console.log("Usunieto danie!");
       }
     });
 
@@ -173,6 +172,28 @@ export class MenuDataService {
       }
       
       return null;
+  }
+
+  removeBoughtAmountOfDish(ordered_dish:DishRecord)
+  {
+    this.menu_dishes.forEach( (item, index) => {
+      if(item === ordered_dish.dish) 
+      {
+
+        const left_available_count = item.available_count - ordered_dish.ordered_amount;
+        if(left_available_count > 0)
+        {
+          item.available_count = left_available_count;
+        }
+        else
+        {
+          this.menu_dishes.splice(index,1);
+          console.log("Usunieto danie!");
+        }
+      }
+    });
+
+    this.getAndSendDataToSubjects();
   }
 
 }

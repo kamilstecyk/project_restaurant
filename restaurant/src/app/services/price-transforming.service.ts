@@ -7,8 +7,8 @@ export class PriceTransformingService {
 
   constructor() {}
 
-  getPriceInUSD(price_in_pln:number):number
+  getPriceInUSD(price_in_pln:number):string
   {
-    return  Number(( price_in_pln * 0.23 ).toFixed(2));
+    return  Number(( price_in_pln * 0.23 ).toFixed(2)).toFixed(2);
   }
 }

@@ -5,12 +5,14 @@ import { BusinessCardComponent } from './components/business-card/business-card.
 import { DishDetailsComponent } from './components/dish-details/dish-details.component';
 import { DishesComponent } from './components/dishes/dishes.component';
 import { ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
+import { ShoppingHistoryComponent } from './components/shopping-history/shopping-history.component';
 
 const routes: Routes = [
   {path: 'potrawy', component: DishesComponent},
   {path: 'koszyk', component: ShoppingCartComponent},
   {path: 'dodaj-danie', component: AddDishComponent},
   {path: 'szczegoly-dania/:id', component: DishDetailsComponent},
+  {path: 'historia', component: ShoppingHistoryComponent},
   {path: '', pathMatch: 'full' , component: BusinessCardComponent}
 ];
 

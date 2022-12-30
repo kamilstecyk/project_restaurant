@@ -127,7 +127,7 @@ export class ShoppingCartService {
         this.ordered_dishes.splice(index,1);
         this.dishes_in_shopping_cart.next(this.ordered_dishes);
         this.currently_all_ordered_dishes.next(this.getAllOrdersCount());
-        console.log("REmoved from cart")
+        console.log("Removed from cart")
         console.log(this.ordered_dishes);
       }
     });
@@ -137,6 +137,13 @@ export class ShoppingCartService {
   {
     return this.ordered_dishes.reduce(
       (accumulator, currentValue) => accumulator + currentValue.ordered_amount, 0);
+  }
+
+  resetShoppingCart()
+  {
+    this.ordered_dishes.splice(0);
+    this.dishes_in_shopping_cart.next(this.ordered_dishes);
+    this.currently_all_ordered_dishes.next(this.getAllOrdersCount());
   }
 
   getAllCurrenlyOrderedDishesCount()

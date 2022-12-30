@@ -1,0 +1,37 @@
+<div class="container mt-5">
+    <div class="d-flex justify-content-center row">
+        <div class="col-md-10">
+            <div class="rounded">
+                <div class="table-responsive table-borderless">
+                    <table class="table" *ngIf="this.ordered_dishes.length > 0">
+                        <thead>
+                            <tr>
+                                <th>Nazwa posiłku</th>
+                                <th>Ilość</th>
+                                <th>Suma</th>
+                                <th>Data zakupu</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body">
+                            <tr class="cell-1" *ngFor="let history_record of this.ordered_dishes">
+                                <td>{{history_record.dish_info.dish.name}}</td>
+                                <td><span class="badge rounded-pill bg-secondary">{{history_record.dish_info.ordered_amount}}</span></td>
+                                <td>${{this.price_transforming_service.getPriceInUSD( history_record.dish_info.dish.price * history_record.dish_info.ordered_amount)}}</td>
+                                <td>{{history_record.date}}</td>
+                                <td><i class="fa fa-ellipsis-h text-black-50"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="alert alert-light" role="alert" *ngIf="this.ordered_dishes.length == 0" style="margin-top: 10rem;">
+                        <h4 class="alert-heading">Brak historii zakupów</h4>
+                        <p>Aby uzyskać rezultaty, przejdź do zakładki potraw, dodaj wybrane do koszyka oraz je zakup. Następnie mozesz wrócic tutaj z powrotem, aby podglądnąć historię zakupów</p>
+                        <hr>
+                        <button class="btn btn-danger btn-lg"><a style="text-decoration:none; color:black;" routerLink="/potrawy">Przejdź do dań</a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

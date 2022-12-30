@@ -19,7 +19,8 @@ import { MenuComponent } from './components/menu/menu.component';
 import { DishDetailsComponent } from './components/dish-details/dish-details.component';
 import { NgImageSliderModule } from 'ng-image-slider';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
+import {NgxPaginationModule} from 'ngx-pagination';
+import { ShoppingHistoryComponent } from './components/shopping-history/shopping-history.component'; // <-- import the module
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,6 +36,7 @@ import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
     BusinessCardComponent,
     MenuComponent,
     DishDetailsComponent,
+    ShoppingHistoryComponent,
   ],
   imports: [
     BrowserModule,

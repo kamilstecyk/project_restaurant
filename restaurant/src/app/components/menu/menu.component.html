@@ -6,10 +6,11 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-link" routerLinkActive="myactive" aria-current="page" routerLink="/" [routerLinkActiveOptions]="{exact: true}">Strona Główna</a>
+          <!-- <a class="nav-link" routerLinkActive="myactive" aria-current="page" routerLink="/" [routerLinkActiveOptions]="{exact: true}">Strona Główna</a> -->
           <a class="nav-link" routerLinkActive="myactive" routerLink="/potrawy">Potrawy</a>
-          <a class="nav-link" routerLinkActive="myactive" routerLink="/koszyk">Koszyk <span class="text-danger" *ngIf="current_number_of_ordered_dishes > 0">({{current_number_of_ordered_dishes}})</span></a>
+          <a class="nav-link" routerLinkActive="myactive" routerLink="/koszyk">Koszyk <span class="badge bg-danger ms-1" *ngIf="current_number_of_ordered_dishes > 0">{{current_number_of_ordered_dishes}}</span></a>
           <a class="nav-link" routerLinkActive="myactive" routerLink="/dodaj-danie" tabindex="-1">Dodaj Danie</a>
+          <a class="nav-link" routerLinkActive="myactive" aria-current="page" routerLink="/historia">Historia zakupów</a>
         </div>
       </div>
     </div>
