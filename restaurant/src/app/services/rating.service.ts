@@ -68,11 +68,18 @@ export class RatingService {
         return record;
       }
     }
+
+    return null;
   }
 
   getCurrentRatingDish()
   {
     return this.current_rating_of_dish;
+  }
+
+  getDishesRatings()
+  {
+    return this.dishes_ratings;
   }
 
   getDishReviews(dish_id: number)

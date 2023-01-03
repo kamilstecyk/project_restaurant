@@ -20,7 +20,8 @@ import { DishDetailsComponent } from './components/dish-details/dish-details.com
 import { NgImageSliderModule } from 'ng-image-slider';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {NgxPaginationModule} from 'ngx-pagination';
-import { ShoppingHistoryComponent } from './components/shopping-history/shopping-history.component'; // <-- import the module
+import { ShoppingHistoryComponent } from './components/shopping-history/shopping-history.component';
+import { StarRatingFilterPipe } from './Pipes/star-rating-filter.pipe'; // <-- import the module
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +38,7 @@ import { ShoppingHistoryComponent } from './components/shopping-history/shopping
     MenuComponent,
     DishDetailsComponent,
     ShoppingHistoryComponent,
+    StarRatingFilterPipe,
   ],
   imports: [
     BrowserModule,

@@ -26,7 +26,17 @@ export class FilteringService {
 
   updateStars(value: string[])
   {
-    this.stars_rating_chosen.next(value);
+    let filtered_stars: number[] = [];
+
+    value.forEach((star_value)=>
+    {
+      const splitted_value = star_value.split(' ');
+      const star = parseInt(splitted_value[0]);
+
+      filtered_stars.push(star);
+    });
+
+    this.stars_rating_chosen.next(filtered_stars);
   }
 
   updateMinValue(value: number)

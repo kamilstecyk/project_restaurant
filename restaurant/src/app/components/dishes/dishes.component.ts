@@ -18,7 +18,7 @@ export class DishesComponent {
   dishes_categories_checked: string[] = [];
   dishes_categories_subscription: any;
 
-  stars_rating_checked: string[] = [];
+  stars_rating_checked: number[] = [];
   stars_rating_subscription: any;
 
   min_value_chosen: number = 0;
@@ -62,10 +62,9 @@ export class DishesComponent {
         this.page = 1;    
       });
 
-    this.stars_rating_subscription = filtering_service.getStarsChosen().subscribe(value=>
+    this.stars_rating_subscription = filtering_service.getStarsChosen().subscribe(value =>
       {
         this.stars_rating_checked =  Object.assign([], value);
-        console.log("Changed - values: " + this.stars_rating_checked);
         this.page = 1;    
     });
 
@@ -106,7 +105,6 @@ export class DishesComponent {
 
   handlePageSizeChange(event: any): void {
     this.tableSize = event.target.value;
-    console.log("Table size --- " + event.target.value);
     this.page = 1;
   }
 

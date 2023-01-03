@@ -63,34 +63,26 @@ export class FilteringComponent {
 
   handleCheckboxesCuisineType(value: string[])
   {
-    // this.cuisine_types_checked = value;
-    // console.log(this.cuisine_types);
     this.filtering_service.updateCuisineTypeChecked(value);
   }
 
   handleCheckBoxesDishCategory(value: string[])
   {
-    // this.dish_categories_checked = value;
-    // console.log(this.dish_categories_checked);
     this.filtering_service.updateDishCategory(value);
   }
 
   handleCheckboxesStars(value: string[])
   {
-    // this.stars_chosen = value;
-    // console.log(this.stars_chosen);
     this.filtering_service.updateStars(value);
   }
 
   handleMaxPriceDish()
   {
-    // console.log(this.value_max)
     this.filtering_service.updateMaxValue(this.value_max);
   }
 
   handleMinPriceDish()
   {
-    // console.log(this.value_min)
     this.filtering_service.updateMinValue(this.value_min);
   }
 
