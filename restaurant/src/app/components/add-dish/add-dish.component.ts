@@ -57,6 +57,7 @@ export class AddDishComponent {
 
       this.menu_data_service.addDishToMenu(new_dish);
 
+      this.dish_ingredients = [];
       this.myform.reset({cuisine_type: 'Wybierz typ', dish_category: 'Wybierz kategorię', number_of_available_dishes: 1, dish_price: 1})
 
       alert("Dodano posiłek!");
