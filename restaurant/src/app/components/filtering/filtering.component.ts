@@ -19,7 +19,7 @@ export class FilteringComponent {
   cuisine_types_checked:string[] = []
   dish_categories_checked:string[] = []
   value_min: number = 0
-  value_max: number = 100
+  value_max: number = 1000
   stars_chosen:string[] = []
 
   current_cuisine_types_subscription: any;
@@ -44,10 +44,12 @@ export class FilteringComponent {
     this.current_min_price_subscription = this.menu_data_service.current_min_price_of_dish.subscribe((value)=>
     {
       this.min_dish_price = value as number;
+      this.value_min = value as number;
     });
     this.current_max_price_subscription = this.menu_data_service.current_max_price_of_dish.subscribe((value)=>
     {
       this.max_dish_price = value as number;
+      this.value_max = value as number;
     });
     this.current_number_of_dishes_subscription = this.menu_data_service.current_number_of_dishes.subscribe((value)=>
     {

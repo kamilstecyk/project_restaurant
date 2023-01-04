@@ -19,8 +19,8 @@ export class MenuDataService {
 
   // filtering data
   private types_of_cuisine: Array<string> = []
-  private max_price: number = -10000;
-  private min_price: number = 10000;
+  private max_price: number = 1000;
+  private min_price: number = 0;
   private categories_of_dishes: Array<string> = []
 
   constructor() 
