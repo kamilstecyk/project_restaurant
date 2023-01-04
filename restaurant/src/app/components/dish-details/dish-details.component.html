@@ -3,7 +3,7 @@
       <h1 class="text-center m-5 font-weight-bold text-uppercase">Szczegóły dania</h1>
       <button class="btn btn-lg btn-danger button" (click)="backToDishes()">Wróć do listy dań</button>
   </div>
-  <div class="slider_images">
+  <div class="slider_images" *ngIf="this.imagesObjectArray.length > 0">
     <ng-image-slider #nav
       [images]="this.imagesObjectArray"
       [infinite]="false"

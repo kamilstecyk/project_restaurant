@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { Subject,BehaviorSubject, ReplaySubject } from 'rxjs';
 import { dishes, Dish } from '../dishes';
 import { DishRecord } from './shopping-cart.service';
-
+import { FirebaseCrudDbOperationsService } from './firebase-crud-db-operations.service';
+import { map } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class MenuDataService {
 
-  private menu_dishes: Array<Dish> = dishes;
+  private menu_dishes: Array<Dish> = [];
+  // private menu_dishes: Array<Dish> = [];
   private current_menu_dishes = new ReplaySubject(1);
 
   current_cuisine_types = new ReplaySubject(1);
@@ -19,14 +21,76 @@ export class MenuDataService {
 
   // filtering data
   private types_of_cuisine: Array<string> = []
-  private max_price: number = -10000;
-  private min_price: number = 10000;
+  private max_price: number = 1000;
+  private min_price: number = 0;
   private categories_of_dishes: Array<string> = []
 
-  constructor() 
-  {
-    this.getAndSendDataToSubjects();
 
+  constructor(private db_service: FirebaseCrudDbOperationsService) 
+  {
+
+    db_service.getAllDishes().snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, ...c.payload.val() })
+          //({ key: c.payload.key, ...c.payload.val() })
+          // change key ->>>> to id 
+        )
+      )
+    ).subscribe(data => 
+      {
+
+        // we reset dishes menu data
+        this.menu_dishes = []
+        console.log("=>>>>>>>>How many dishes: " + data.length);
+        console.log(data);
+        
+        data.forEach((dish)=>
+        {
+
+          // we check if properties are not null, because we have such structure of dish object, firebase db does not store empty nodes
+          if(dish.available_count != null && dish.category != null && dish.cuisine_type!= null && dish.description != null && dish.id != null && dish.name != null && dish.price != null)
+          {
+            if(dish.imgs_paths == null)
+            {
+              dish.imgs_paths = [];
+            }
+
+            if(dish.ingredients == null)
+            {
+              dish.ingredients = []
+            }
+
+            this.menu_dishes.push({ "id" : dish.id, "name" : dish.name, "cuisine_type" : dish.cuisine_type, "category" : dish.category, "ingredients" : dish.ingredients , "available_count" : dish.available_count , "price" : dish.price , "description" : dish.description , imgs_paths : dish.imgs_paths, key : dish.key });
+          }
+
+          this.getAndSendDataToSubjects();
+        });
+
+        console.log("Subscribed to menu dishes : ");
+        console.log(this.menu_dishes);
+       
+      });
+
+
+    // fetch("http://localhost:3000/dishes")
+    // .then((response) => {
+
+    //     if (response.status !== 200) {
+    //         console.log("są błędy");
+    //     }
+
+    //     console.log("OK");
+    //     return response.json();
+    // })
+    // .then(data=> {console.log(data);this.menu_dishes = data;}).then( ()=> {this.getAndSendDataToSubjects();console.log("Menu dishes array: ");
+    // console.log(this.menu_dishes);} )
+    // .catch((err) => {
+    //     console.log("błąd podczas pobierania danych", err);
+    //     // error msg on the screen
+    // });
+
+    console.log("Menu dishes array: ");
     console.log(this.menu_dishes);
   }
 
@@ -59,7 +123,7 @@ export class MenuDataService {
   {
     this.menu_dishes.forEach( dish => 
       {
-        if(!this.types_of_cuisine.includes(dish.cuisine_type))
+        if( dish.cuisine_type != null && !this.types_of_cuisine.includes(dish.cuisine_type))
         {
           this.types_of_cuisine.push(dish.cuisine_type);
         }
@@ -70,17 +134,19 @@ export class MenuDataService {
   {
     this.menu_dishes.forEach( dish => 
       {
+        if(dish.price != null)
+        {
         
-        if(dish.price > this.max_price)
-        {
-          this.max_price = dish.price;
-        }
+          if(dish.price > this.max_price)
+          {
+            this.max_price = dish.price;
+          }
 
-        if(dish.price < this.min_price )
-        {
-          this.min_price = dish.price;
+          if(dish.price < this.min_price )
+          {
+            this.min_price = dish.price;
+          }
         }
-
       } );
 
       console.log("max: " + this.max_price);
@@ -91,7 +157,7 @@ export class MenuDataService {
   {
     this.menu_dishes.forEach( dish => 
       {
-        if(!this.categories_of_dishes.includes(dish.category))
+        if( dish.category != null &&  !this.categories_of_dishes.includes(dish.category))
         {
           this.categories_of_dishes.push(dish.category);
         }
@@ -132,15 +198,30 @@ export class MenuDataService {
 
   removeDishFromMenu(dish_to_delete: Dish)
   {
-    this.menu_dishes.forEach( (item, index) => {
-      if(item === dish_to_delete) 
-      {
-        this.menu_dishes.splice(index,1);
-        console.log("Usunieto danie!");
-      }
-    });
+    // this.menu_dishes.forEach( (item, index) => {
+    //   if(item === dish_to_delete) 
+    //   {
+    //     this.menu_dishes.splice(index,1);
+    //     console.log("Usunieto danie!");
+    //   }
+    // });
+    // this.getAndSendDataToSubjects();
 
-    this.getAndSendDataToSubjects();
+
+    // this.db_service.deleteDish
+
+    if(dish_to_delete.key)
+    {
+      this.db_service.deleteDish(dish_to_delete.key).then(()=>
+      {
+        alert("Pomyślnie usunięto danie z menu!");
+      }).catch(err =>
+        {
+          console.log(err);
+          alert("Nie powiodło się usunięcie dania z menu!");
+        });
+    }
+    
   }
 
   addDishToMenu(dish_to_add: Dish)
@@ -153,7 +234,7 @@ export class MenuDataService {
 
   getLastId() 
   {
-    if(this.menu_dishes.length > 0)
+    if(this.menu_dishes != null && this.menu_dishes.length > 0)
     {
       return this.menu_dishes[this.menu_dishes.length-1].id;
     }
@@ -163,8 +244,13 @@ export class MenuDataService {
 
   getDishWithId(id: number):Dish | null
   {
-      for(var dish of dishes)
+      console.log("Dish iterating id: ");
+      console.log(this.menu_dishes);
+
+      for(var dish of this.menu_dishes)
       {
+        console.log("Dish iterating id: " + dish.id);
+
         if(dish.id === id )
         {
           return dish as Dish;
@@ -180,15 +266,28 @@ export class MenuDataService {
       if(item === ordered_dish.dish) 
       {
 
-        const left_available_count = item.available_count - ordered_dish.ordered_amount;
-        if(left_available_count > 0)
+        if(item.available_count != null )
         {
-          item.available_count = left_available_count;
-        }
-        else
-        {
-          this.menu_dishes.splice(index,1);
-          console.log("Usunieto danie!");
+          const left_available_count = item.available_count - ordered_dish.ordered_amount;
+          if(left_available_count > 0)
+          {
+            item.available_count = left_available_count;
+
+            if(item.key)
+            {
+              this.db_service.updateDish(item.key, { available_count : left_available_count })
+            }
+          }
+          else
+          {
+
+            if(item.key)
+            {
+              this.db_service.deleteDish(item.key);
+            }
+
+            console.log("Usunieto danie!");
+          }
         }
       }
     });

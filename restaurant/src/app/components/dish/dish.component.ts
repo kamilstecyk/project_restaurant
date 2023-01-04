@@ -16,9 +16,7 @@ export class DishComponent {
   @Input() dish_object: any;
   @Input() object_index?:number;
 
-  constructor(public price_transforming_service: PriceTransformingService, private menu_data_service: MenuDataService, private shooping_cart_service: ShoppingCartService)
-  {
-  }
+  constructor(public price_transforming_service: PriceTransformingService, private menu_data_service: MenuDataService, private shooping_cart_service: ShoppingCartService){}
 
   ngOnInit()
   {

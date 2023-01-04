@@ -61,7 +61,7 @@
         </div>
         <div class="mb-3">
           <label for="formFileMultiple" class="form-label">Zdjęcia dania</label>
-          <input class="form-control" type="file" id="input_multiple_files" multiple accept="image/png, image/gif, image/jpeg" >
+          <input class="form-control" type="file" id="input_multiple_files" multiple accept="image/png, image/gif, image/jpeg"  (change)="selectFile($event)" >
         </div>
         <button type="submit" class="btn btn-dark btn-lg" style="margin-left: auto; margin-right: auto;margin-top: 2rem; padding: 1.5rem">Dodaj danie</button>
       </form>

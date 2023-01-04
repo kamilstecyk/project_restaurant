@@ -11,6 +11,7 @@ export class StarRatingFilterPipe implements PipeTransform {
   transform(value: any, filter_data: number[]) {
 
     console.log("Filters: " + filter_data );
+    console.log(value);
 
     if(value.length == 0 || filter_data.length == 0)
     {

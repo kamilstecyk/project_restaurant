@@ -35,17 +35,18 @@ export class DishDetailsComponent {
   {
     this.given_id_of_object = Number(this.activated_route.snapshot.paramMap.get('id'));
     this.dish_object  = menu_data_service.getDishWithId(this.given_id_of_object);
+    console.log("Dish object details");
+    console.log(this.given_id_of_object);
     console.log(this.dish_object?.imgs_paths);
 
     if(this.dish_object != null )
     {
       this.dish_object.imgs_paths.forEach(img_path => 
         {
-          for(var i = 0; i<10; ++i)
-          {
-            var img_object = {image: img_path, thumbImage: img_path};
-            this.imagesObjectArray.push(img_object);
-          }
+          
+          var img_object = {image: img_path, thumbImage: img_path};
+          this.imagesObjectArray.push(img_object);
+          
         });
       }
   }

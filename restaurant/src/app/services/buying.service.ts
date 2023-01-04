@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DishRecord } from './shopping-cart.service';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 
 export interface HistoryRecord
 {
@@ -11,22 +12,24 @@ export interface HistoryRecord
   providedIn: 'root'
 })
 export class BuyingService {
-  order_history: HistoryRecord[] = [];
+  private dbPath = '/orders_history';
+  ordersHistoryRef: AngularFireList<HistoryRecord>;
 
-  constructor() {}
+  constructor(private db_service: AngularFireDatabase) 
+  {
+    this.ordersHistoryRef = db_service.list(this.dbPath);
+  }
 
   buyDishes(ordered_dishes:DishRecord[], date_of_order: string)
   { 
     ordered_dishes.forEach((record)=>
     {
-      this.order_history.push({dish_info: record, date: date_of_order});
+      this.ordersHistoryRef.push({dish_info: record, date: date_of_order});
     });
-
-    console.log(this.order_history);
   }
 
-  getWholeOrdersHistory()
+  getOrdersHistory(): AngularFireList<HistoryRecord>
   {
-    return this.order_history;
+    return this.ordersHistoryRef;
   }
 }

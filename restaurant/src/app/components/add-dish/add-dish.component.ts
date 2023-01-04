@@ -4,6 +4,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { MenuDataService } from 'src/app/services/menu-data.service';
+import { FirebaseCrudDbOperationsService } from 'src/app/services/firebase-crud-db-operations.service';
+import { FileStorageFbDbCrudService } from 'src/app/services/file-storage-fb-db-crud.service';
+import { FileUpload } from 'src/app/files';
 
 @Component({
   selector: 'app-add-dish',
@@ -16,7 +19,9 @@ export class AddDishComponent {
   myform: any; 
   dish_ingredients:string[] = []
 
-  constructor(private menu_data_service:MenuDataService){}
+  selectedFiles?: FileList;
+
+  constructor(private menu_data_service:MenuDataService, private db_service: FirebaseCrudDbOperationsService, private file_upload_service: FileStorageFbDbCrudService){}
 
   ngOnInit() {
     this.myform = new FormGroup({
@@ -35,31 +40,80 @@ export class AddDishComponent {
     if (this.myform.valid) {
       console.log("Form Submitted!");
 
-      let last_id = this.menu_data_service.getLastId();
-      let new_id = 1;
-
-      if(last_id != -1)
+      const uploadFiles = new Promise((resolve,reject) =>
       {
-        new_id = last_id + 1;
-      }
+        this.file_upload_service.resetImgsPathsToUpload();
+        if(this.selectedFiles)
+        {
+          this.file_upload_service.setHowManyToUpload(this.selectedFiles?.length);
+        }
+        else 
+        {
+          resolve([]);
+        }
 
-      const new_dish:Dish = {
-        id: new_id,
-        name: this.myform.controls.dish_name.value,
-        cuisine_type: this.myform.controls.cuisine_type.value,
-        category: this.myform.controls.dish_category.value,
-        ingredients: this.dish_ingredients,
-        available_count: this.myform.controls.number_of_available_dishes.value,
-        price: this.myform.controls.dish_price.value,
-        description: this.myform.controls.short_desc.value,
-        imgs_paths: []
-      }
+        if(this.selectedFiles && this.selectedFiles?.length > 0)
+        {
+          for (let i = 0; i < this.selectedFiles.length; i++) {
+            let file = this.selectedFiles.item(i);
 
-      this.menu_data_service.addDishToMenu(new_dish);
+            if(file)
+            {
+              this.file_upload_service.pushFileToStorage(new FileUpload(file), resolve).subscribe(percantage =>
+                {
+                  console.log(Math.round(percantage ? percantage : 0));
+                }, error => {console.log(error);reject("Error while adding!")});
+            }
+          }
+        }
+      });
 
-      this.myform.reset({cuisine_type: 'Wybierz typ', dish_category: 'Wybierz kategorię', number_of_available_dishes: 1, dish_price: 1})
+      uploadFiles.then(value => {
+        const path_to_uploaded_imgs = value as string[];
 
-      alert("Dodano posiłek!");
+        let last_id = this.menu_data_service.getLastId();
+        let new_id = 1;
+  
+        if(last_id != -1)
+        {
+          new_id = last_id + 1;
+        }
+  
+        let description_to_add = ""
+  
+        if(this.myform.controls.short_desc.value != null)
+        {
+          description_to_add = this.myform.controls.short_desc.value;
+        }
+  
+        const new_dish:Dish = {
+          id: new_id,
+          name: this.myform.controls.dish_name.value,
+          cuisine_type: this.myform.controls.cuisine_type.value,
+          category: this.myform.controls.dish_category.value,
+          ingredients: this.dish_ingredients,
+          available_count: this.myform.controls.number_of_available_dishes.value,
+          price: this.myform.controls.dish_price.value,
+          description: description_to_add,
+          imgs_paths: path_to_uploaded_imgs
+        }
+
+          // this.menu_data_service.addDishToMenu(new_dish);
+        this.db_service.createNewDish(new_dish).then(()=> 
+        {
+          console.log("Added to db new dish!");
+          this.dish_ingredients = []
+          this.myform.reset({cuisine_type: 'Wybierz typ', dish_category: 'Wybierz kategorię', number_of_available_dishes: 1, dish_price: 1})
+
+          alert("Dodano posiłek!");
+        }).catch(()=>
+        {
+          console.log("Error while adding to db!");
+          alert("Niestety nie mozliwe bylo dodanie posilku do bazy!");
+        })
+
+        })
+
     }
     else 
     {
@@ -90,6 +144,12 @@ export class AddDishComponent {
 
     console.log(this.dish_ingredients);
   }
+
+  selectFile(event: any): void {
+    this.selectedFiles = event.target.files;
+    console.log(this.selectedFiles);
+  }
+
 }
 
 function selectValidator(): ValidatorFn {
@@ -109,3 +169,5 @@ function selectValidator(): ValidatorFn {
   };
 
 }
+
+

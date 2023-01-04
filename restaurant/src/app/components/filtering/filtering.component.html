@@ -3,7 +3,7 @@
       <h2 class="pt-1 pb-1">Filtruj dania</h2>
       <img class="ms-4" src="../../../assets/bx-filter-alt.svg" alt="Filter icon" />
     </div>
-    <div class="row mb-3 {{ !this.is_extended_filter_section ? 'closed' : '' }}" style="{{this.is_extended_filter_section ? 'height: 80vh' : ''}}">
+    <div class="row mb-3 {{ !this.is_extended_filter_section ? 'closed' : '' }}" [style]="this.is_extended_filter_section ? 'height: 80vh' : ''">
         <div class="card">
             <div class="card-body flex_center_col">
               <app-checkboxes-filtering [data]="this.cuisine_types" [category]="'Typ kuchni'" (checked_changed)="handleCheckboxesCuisineType($event)"></app-checkboxes-filtering>

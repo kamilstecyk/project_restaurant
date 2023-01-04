@@ -22,6 +22,23 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { ShoppingHistoryComponent } from './components/shopping-history/shopping-history.component';
 import { StarRatingFilterPipe } from './Pipes/star-rating-filter.pipe'; // <-- import the module
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAYohbpga62vT9EvTZ-8lczRQdAEDYMW8M",
+  authDomain: "restaurant-project-web-angular.firebaseapp.com",
+  projectId: "restaurant-project-web-angular",
+  storageBucket: "restaurant-project-web-angular.appspot.com",
+  messagingSenderId: "335319972674",
+  appId: "1:335319972674:web:d1eef6ab081d2ec4f726db"
+};
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,7 +65,10 @@ import { StarRatingFilterPipe } from './Pipes/star-rating-filter.pipe'; // <-- i
     MatSliderModule,
     NgImageSliderModule,
     MatPaginatorModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule,
+    AngularFireStorageModule
   ],
   providers: [],
   bootstrap: [AppComponent]

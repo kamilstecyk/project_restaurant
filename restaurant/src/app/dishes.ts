@@ -9,6 +9,7 @@ export interface Dish
   price: number;
   description: string;
   imgs_paths: string[];
+  key?: string | null;
 }
   
 export const dishes = [

@@ -39,6 +39,8 @@ export class DishesComponent {
       this.dishes_data = Object.assign([], value) as  Array<Dish>;
       this.count = this.dishes_data.length;
       this.page = 1;
+      console.log("Got fetch dishes: ");
+      console.log(this.dishes_data);
     });
   }
 
