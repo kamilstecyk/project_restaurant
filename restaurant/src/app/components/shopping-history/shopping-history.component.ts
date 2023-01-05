@@ -10,7 +10,7 @@ import { map } from 'rxjs';
 })
 export class ShoppingHistoryComponent {
   ordered_dishes: HistoryRecord[] = [];
-
+  downloading_dishes_history = true;
 
   constructor(private buying_service:BuyingService, public price_transforming_service: PriceTransformingService)
   {
@@ -47,6 +47,7 @@ export class ShoppingHistoryComponent {
 
           // we reverse object to have newest at the top
           this.ordered_dishes.reverse();
+          this.downloading_dishes_history = false;
         });
       });
   }

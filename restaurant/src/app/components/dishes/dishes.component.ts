@@ -33,6 +33,8 @@ export class DishesComponent {
   tableSize: number = 2;
   tableSizes: any = [1, 2, 3, 6, 9, 12];
 
+  downloading_dishes = true;
+
   fetchDishes(): void {
     this.current_dishes_data_subscirption = this.menu_data_service.getDishes().subscribe((value) => 
     {
@@ -41,6 +43,7 @@ export class DishesComponent {
       this.page = 1;
       console.log("Got fetch dishes: ");
       console.log(this.dishes_data);
+      this.downloading_dishes = false;
     });
   }
 

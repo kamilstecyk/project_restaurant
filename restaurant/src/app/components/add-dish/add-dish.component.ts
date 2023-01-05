@@ -7,6 +7,7 @@ import { MenuDataService } from 'src/app/services/menu-data.service';
 import { FirebaseCrudDbOperationsService } from 'src/app/services/firebase-crud-db-operations.service';
 import { FileStorageFbDbCrudService } from 'src/app/services/file-storage-fb-db-crud.service';
 import { FileUpload } from 'src/app/files';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-add-dish',
@@ -20,6 +21,8 @@ export class AddDishComponent {
   dish_ingredients:string[] = []
 
   selectedFiles?: FileList;
+  uploading = false;
+  loading_value = 0;
 
   constructor(private menu_data_service:MenuDataService, private db_service: FirebaseCrudDbOperationsService, private file_upload_service: FileStorageFbDbCrudService){}
 
@@ -62,12 +65,14 @@ export class AddDishComponent {
               this.file_upload_service.pushFileToStorage(new FileUpload(file), resolve).subscribe(percantage =>
                 {
                   console.log(Math.round(percantage ? percantage : 0));
+                  this.loading_value = Math.round(percantage ? percantage : 0);
                 }, error => {console.log(error);reject("Error while adding!")});
             }
           }
         }
       });
-
+      
+      this.uploading = true;
       uploadFiles.then(value => {
         const path_to_uploaded_imgs = value as string[];
 
@@ -110,6 +115,10 @@ export class AddDishComponent {
         {
           console.log("Error while adding to db!");
           alert("Niestety nie mozliwe bylo dodanie posilku do bazy!");
+        }).finally(()=>
+        {
+          this.uploading = false;
+          this.loading_value = 0;
         })
 
         })

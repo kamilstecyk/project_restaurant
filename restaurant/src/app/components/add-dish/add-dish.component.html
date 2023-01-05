@@ -1,4 +1,15 @@
-<div class="form_container">
+<div class="loader-container" *ngIf="this.uploading == true">
+  <mat-progress-bar  class="green-progress" mode="determinate" [value]="this.loading_value"></mat-progress-bar>
+  <button class="btn btn-primary" type="button" disabled>
+    <span
+      class="spinner-border spinner-border-sm"
+      role="status"
+      aria-hidden="true"
+    ></span>
+    <span style="font-size: 1.6rem; font-weight: bold; letter-spacing: 2px;">Dodawanie...</span>
+  </button>
+</div>
+<div class="form_container" *ngIf="this.uploading == false">
     <div class="form_and_ingredients_container">
         <form novalidate [formGroup]="myform" (ngSubmit)="onSubmit()">
           

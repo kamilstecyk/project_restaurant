@@ -1,3 +1,13 @@
+<div class="loader-container" *ngIf="this.downloading_dishes_history == true">
+    <button class="btn btn-primary" type="button" disabled>
+      <span
+        class="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true"
+      ></span>
+      <span style="font-size: 1.6rem; font-weight: bold; letter-spacing: 2px;">Ładowanie...</span>
+    </button>
+</div>
 <div class="container mt-5 history_wrapper">
     <div class="d-flex justify-content-center row">
         <div class="col-md-10">
@@ -23,7 +33,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="alert alert-light" role="alert" *ngIf="this.ordered_dishes.length == 0" style="margin-top: 10rem;">
+                    <div class="alert alert-light" role="alert" *ngIf="this.ordered_dishes.length == 0 && this.downloading_dishes_history == false" style="margin-top: 10rem;">
                         <h4 class="alert-heading">Brak historii zakupów</h4>
                         <p>Aby uzyskać rezultaty, przejdź do zakładki potraw, dodaj wybrane do koszyka oraz je zakup. Następnie mozesz wrócic tutaj z powrotem, aby podglądnąć historię zakupów</p>
                         <hr>
