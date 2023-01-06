@@ -1,7 +1,7 @@
 <div class="container text-center mt-4 {{ !(this.current_number_of_dishes > 1) ? 'closed' : ''}}">
     <div class="flex_center_row filter_dishes" (click)="handleExtendingFilteringParameters()">
-      <h2 class="pt-1 pb-1">Filtruj dania</h2>
-      <img class="ms-4" src="../../../assets/bx-filter-alt.svg" alt="Filter icon" />
+      <h2 class="pt-1 pb-1" >Filtruj dania</h2>
+      <img class="mb-3 ms-4" src="../../../assets/bx-filter-alt.svg" alt="Filter icon" />
     </div>
     <div class="row mb-3 {{ !this.is_extended_filter_section ? 'closed' : '' }}" [style]="this.is_extended_filter_section ? 'height: 80vh' : ''">
         <div class="card">

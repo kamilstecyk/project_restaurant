@@ -87,6 +87,8 @@ export class DishesComponent {
 
     var x = window.matchMedia("(max-width: 600px)")
     this.changeItemsPerPageIfItIsPhone(x)
+
+    console.log("Invoking after navigating...!!!");
   } 
 
   ngOnInit()

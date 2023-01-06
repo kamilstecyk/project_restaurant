@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
-
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
+import { map } from 'rxjs';
+import { ReCaptchaV3Provider } from 'firebase/app-check';
 export interface DishRatingRecord
 {
+  key?: string | null;
   dishId: number,
   averageStarRate: number,
   numberOfReviews: number,
@@ -31,8 +34,48 @@ export class RatingService {
 
   private dishes_reviews: DishReviewRecord[] = [];
   private current_dish_reviews = new ReplaySubject(1);
+
+  private dbPath = '/starRatings';
+  starRatingsRef: AngularFireList<DishRatingRecord>;
   
-  constructor() { }
+  constructor(private db_service: AngularFireDatabase) 
+  {
+    this.starRatingsRef = db_service.list(this.dbPath);
+
+    this.getAll().snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, ...c.payload.val() })
+        )
+      )
+    ).subscribe(data => 
+      {
+        this.dishes_ratings = []
+
+        data.forEach(record => {
+          if(record.averageStarRate != null && record.dishId != null && record.numberOfReviews != null && record.sumRating != null)
+          {
+            this.dishes_ratings.push({key: record.key, dishId: record.dishId, averageStarRate: record.averageStarRate, numberOfReviews: record.numberOfReviews, sumRating: record.sumRating});
+          }
+        });
+      }
+    );
+  }
+
+  getAll(): AngularFireList<DishRatingRecord>
+  {
+    return this.starRatingsRef;
+  }
+
+  create(star_rating_record: DishRatingRecord)
+  {
+    return this.starRatingsRef.push(star_rating_record);
+  }
+
+  update(key: string, value: any): any 
+  {
+    return this.starRatingsRef.update(key, value);
+  }
 
   addDishRatingStar(number_of_stars: number, id: number)
   {
@@ -48,6 +91,11 @@ export class RatingService {
         
         was_founded = true;
         this.current_rating_of_dish.next(record);
+        if(record.key)
+        {
+          this.update(record.key, {sumRating: record.sumRating, numberOfReviews: record.numberOfReviews, averageStarRate: record.averageStarRate})
+        }
+
         break;
       }
     }
@@ -56,6 +104,8 @@ export class RatingService {
     {
       this.dishes_ratings.push({dishId: id, averageStarRate: number_of_stars, numberOfReviews: 1, sumRating: number_of_stars});
       this.current_rating_of_dish.next({dishId: id, averageStarRate: number_of_stars, numberOfReviews: 1, sumRating: number_of_stars});
+
+      this.create({dishId: id, averageStarRate: number_of_stars, numberOfReviews: 1, sumRating: number_of_stars});
     }
   }
 
@@ -82,7 +132,7 @@ export class RatingService {
     return this.dishes_ratings;
   }
 
-  getDishReviews(dish_id: number)
+  getDishReviews(dish_id: number | null)
   {
     for(let record of this.dishes_reviews)
     {

@@ -1,199 +1,230 @@
-<div class="start_part">
-  <div class="flex_center_row header_title">
-      <h1 class="text-center m-5 font-weight-bold text-uppercase">Szczegóły dania</h1>
-      <button class="btn btn-lg btn-danger button" (click)="backToDishes()">Wróć do listy dań</button>
-  </div>
-  <div class="slider_images" *ngIf="this.imagesObjectArray.length > 0">
-    <ng-image-slider #nav
-      [images]="this.imagesObjectArray"
-      [infinite]="false"
-      [autoSlide]="1"
-      [imageSize]="{width: '30%', height: 300}"
-      slideImage="1"></ng-image-slider>
-  </div>
+<div class="loader-container" *ngIf="this.downloading_dish == true">
+  <button class="btn btn-primary" type="button" disabled>
+    <span
+      class="spinner-border spinner-border-sm"
+      role="status"
+      aria-hidden="true"
+    ></span>
+    <span style="font-size: 1.6rem; font-weight: bold; letter-spacing: 2px;">Ładowanie...</span>
+  </button>
 </div>
-<div class="flex_space_evenly_row wrapper">  
-    <div class="dish_wrapper flex_center_col" [style.border]=" dish_object.price > 26 ? '3px solid lightgreen' : '3px solid red' " *ngIf="dish_object != null">
-        <div class="flex_center_row">
-            <img src="../../../assets/bxs-minus-circle.svg" alt="Decrease number of order icon" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'"  class="decrease_order_size" (click)="handleRemoveDishFromOrder()"/>
-
-            <img src="../../../assets/bxs-plus-circle.svg" alt="Increase number or order icon" class="increase_order_size" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'" (click)="handleAddDishToOrder()"/>
-        </div>
-        <div class="dish_desc flex_center_col">
-            <div class="flex_center_row">
-                <h3>Nazwa dania:</h3>
-                <h3>{{dish_object.name | uppercase}}</h3>
-            </div>
-            <div class="flex_center_row">
-                <h3>Typ kuchni:</h3>
-                <h3>{{dish_object.cuisine_type | uppercase}}</h3>
-            </div>
-            <div class="flex_center_row">
-                <h3>Kategoria posiłku:</h3>
-                <h3>{{dish_object.category}}</h3>
-            </div>
-            <div class="dish_param flex_center_col">
-                <h3>Lista składników:</h3>
-                <img src="../../../assets/bxs-down-arrow.svg" alt="Extend list icon" class="extend_list_btn" (click)="handleExtensionOfIngredientList()"  *ngIf="is_ingredient_list_extended == false" />
-                <img src="../../../assets/bxs-up-arrow.svg" alt="Extend list icon" class="extend_list_btn" (click)="handleExtensionOfIngredientList()"  *ngIf="is_ingredient_list_extended == true" />
-                <ul class="extending_list" *ngIf="is_ingredient_list_extended == true">
-                    <li *ngFor="let ingredient of dish_object.ingredients">{{ingredient}}</li>
-                    <li *ngIf="dish_object.ingredients.length == 0">Brak informacji o składnikach</li>
-                </ul>
-            </div>
-            <div class="flex_center_row">
-                <h3 *ngIf="currently_available > 0">Ilość dań dostępnych:</h3>
-                <h3 [style.color]="getFontColor()">{{ (currently_available > 0) ? currently_available : 'Danie niedostępne' }}</h3>
-            </div>
-            <div class="flex_center_row">
-                <h3>Cena posiłku:</h3>
-                <h3>{{ this.price_transforming_service.getPriceInUSD(dish_object.price) | currency:'USD '}}</h3>
-            </div>
-            <div class="flex_center_row" style="margin-top: 2rem;" >
-                <h3>Krótki opis:</h3>
-                <h3 style="font-weight: normal;font-size: 1.3rem;">{{(dish_object.description != null) ? dish_object.description : "Brak informacji"}}</h3>
-            </div>
-
-            <app-star-rating [product_id]="dish_object.id">
-            </app-star-rating>
-
-            <div class="flex_center_row" >
-                <button class="button_styled" (click)="removeFromMenu()">Usuń danie z menu</button>
-            </div>
-        </div>
+<div class="alert alert-light w-75 p-3" role="alert" style="margin-left: auto; margin-right: auto;margin-top: 10rem;" *ngIf="this.dish_object == null && this.downloading_dish == false" >
+  <h4 class="alert-heading">Brak takiego dania</h4>
+  <p>Aby uzyskać rezultaty, przejdź do zakładki dodaj danie, aby dodać wybraną potrawę. Następnie mozesz wrócic tutaj z powrotem, aby podglądnąć dania.</p>
+  <hr>
+  <button class="btn btn-danger btn-lg p-2 mt-2"><a style="text-decoration:none; color:black;" routerLink="/dodaj-danie">Przejdź do dań</a>
+  </button>
+</div>
+<div *ngIf="this.dish_object != null && this.downloading_dish == false">
+  <div class="start_part">
+    <div class="flex_center_row header_title">
+        <h1 class="text-center m-5 font-weight-bold text-uppercase">Szczegóły dania</h1>
+        <button class="btn btn-lg btn-danger button" (click)="backToDishes()">Wróć do listy dań</button>
     </div>
-    <div class="container text-center form_part m-4">
-        <h2>Wystaw recenzje dla tego dania</h2>
-        <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="(myform.controls['nick'].errors?.required || myform.controls['date'].errors?.required || myform.controls['review_content'].errors?.required) && this.sumbit_btn_was_clicked ">
-          Pola nie mogą być puste, uzupełnij je!
-        </div>
-        <form class="mt-4 text-start form_styled"  novalidate [formGroup]="myform" (ngSubmit)="onSubmit()" >
-            <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.nick.invalid && myform.controls.nick.dirty" > 
-                Niepoprawny nick lub pusty!
-            </div>
-            <div class="form-group m-3">
-              <label class="h3 mb-2" for="exampleFormControlInput1">Nick</label>
-              <input type="text" class="form-control form-control-lg p-2" id="nick_input" placeholder="nazwa uzytkownika" formControlName="nick" required>
-            </div>
-            <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.date.invalid && myform.controls.date.dirty" > 
-              Wybrana data jest niepoprawna, musi być nie pózniejsza niz dzis!
-            </div>
-            <div class="form-group m-3">
-              <label class="h3 mb-2" for="exampleFormControlInput1">Data zakupu</label>
-              <input type="date" class="form-control form-control-lg pe-2" id="date_input" formControlName="date">
-            </div>
-            <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.review_content.invalid && myform.controls.review_content.dirty" > 
-              Pole musi zawierać więcej niz 50 znakow, ale mniej niz 500!
-            </div>
-            <div class="form-group m-3">
-              <label class="h3 mb-2" for="exampleFormControlTextarea1">Wpisz treść swojej recenzji (minimum 50 znaków)</label>
-              <textarea class="form-control form-control-lg p-2" id="review_textarea_input" rows="3" formControlName="review_content" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-danger btn-lg w-100 mt-4" style="font-size:1.4rem">Dodaj opinię</button>        
-        </form>
+    <div class="flex_center_row" *ngIf="this.imagesObjectArray.length == 1">
+      <a href="{{this.dish_object.imgs_paths[0]}}" target="_blank" style="width: 45%; height: 300px"><img src="{{this.dish_object.imgs_paths[0]}}" alt="Dish Image" style="width: 100%; height: 100%"></a>
+    </div>
+    <div class="slider_images" *ngIf="this.imagesObjectArray.length > 1 && this.imagesObjectArray.length < 4" >
+      <ng-image-slider #nav
+        [images]="this.imagesObjectArray"
+        [autoSlide]="1"
+        [imageSize]="{width: this.slider_width_of_imgs, height: 300}"
+        slideImage="1"></ng-image-slider>
+    </div>
+    <div class="slider_images" *ngIf="this.imagesObjectArray.length >= 4">
+      <ng-image-slider #nav
+        [images]="this.imagesObjectArray"
+        [infinite]="true"
+        [videoAutoPlay]="true"
+        [autoSlide]="1"
+        [imageSize]="{width: '25%', height: 300}"
+        slideImage="1"></ng-image-slider>
+    </div>
+  </div>
+  <div class="flex_space_evenly_row wrapper">  
+      <div class="dish_wrapper flex_center_col" [style.border]=" dish_object.price > 26 ? '3px solid lightgreen' : '3px solid red' " *ngIf="dish_object != null">
+          <div class="flex_center_row">
+              <img src="../../../assets/bxs-minus-circle.svg" alt="Decrease number of order icon" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'"  class="decrease_order_size" (click)="handleRemoveDishFromOrder()"/>
 
-        <div class="row d-flex justify-content-center mt-5 comments_box" >
-            <div class="col-md-12col-lg-10" *ngFor="let review of this.dish_reviews">
-              <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                <div class="card-body p-4">
-                  <div class="card mb-4">
-                    <div class="card-body">
-                      <p class="h4 p-2">{{ review.content }}</p>
-          
-                      <div class="d-flex justify-content-between mt-2">
-                        <div class="d-flex flex-row align-items-center">
-                          <p class="h4 mb-0 ms-2">{{review.nick}}&nbsp;<img src="../../../assets/bxs-user-pin.svg" alt="user icon"/></p>
-                        </div>
-                        <div class="h5 me-2">
-                          {{ review.date }}
+              <img src="../../../assets/bxs-plus-circle.svg" alt="Increase number or order icon" class="increase_order_size" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'" (click)="handleAddDishToOrder()"/>
+          </div>
+          <div class="dish_desc flex_center_col">
+              <div class="flex_center_row">
+                  <h3>Nazwa dania:</h3>
+                  <h3>{{dish_object.name | uppercase}}</h3>
+              </div>
+              <div class="flex_center_row">
+                  <h3>Typ kuchni:</h3>
+                  <h3>{{dish_object.cuisine_type | uppercase}}</h3>
+              </div>
+              <div class="flex_center_row">
+                  <h3>Kategoria posiłku:</h3>
+                  <h3>{{dish_object.category}}</h3>
+              </div>
+              <div class="dish_param flex_center_col">
+                  <h3>Lista składników:</h3>
+                  <img src="../../../assets/bxs-down-arrow.svg" alt="Extend list icon" class="extend_list_btn" (click)="handleExtensionOfIngredientList()"  *ngIf="is_ingredient_list_extended == false" />
+                  <img src="../../../assets/bxs-up-arrow.svg" alt="Extend list icon" class="extend_list_btn" (click)="handleExtensionOfIngredientList()"  *ngIf="is_ingredient_list_extended == true" />
+                  <ul class="extending_list" *ngIf="is_ingredient_list_extended == true">
+                      <li class="m-2" *ngFor="let ingredient of dish_object.ingredients">{{ingredient}}</li>
+                      <li *ngIf="dish_object.ingredients.length == 0">Brak informacji o składnikach</li>
+                  </ul>
+              </div>
+              <div class="flex_center_row">
+                  <h3 *ngIf="currently_available > 0">Ilość dań dostępnych:</h3>
+                  <h3 [style.color]="getFontColor()">{{ (currently_available > 0) ? currently_available : 'Danie niedostępne' }}</h3>
+              </div>
+              <div class="flex_center_row">
+                  <h3>Cena posiłku:</h3>
+                  <h3>{{ this.price_transforming_service.getPriceInUSD(dish_object.price) | currency:'USD '}}</h3>
+              </div>
+              <div class="flex_center_row" style="margin-top: 2rem;" >
+                  <h3>Krótki opis:</h3>
+                  <h3 style="font-weight: normal;font-size: 1.3rem;">{{(dish_object.description != null) ? dish_object.description : "Brak informacji"}}</h3>
+              </div>
+
+              <app-star-rating [product_id]="dish_object.id">
+              </app-star-rating>
+
+              <div class="flex_center_row" >
+                  <button class="button_styled" (click)="removeFromMenu()">Usuń danie z menu</button>
+              </div>
+          </div>
+      </div>
+      <div class="container text-center form_part m-4">
+          <h2>Wystaw recenzje dla tego dania</h2>
+          <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="(myform.controls['nick'].errors?.required || myform.controls['date'].errors?.required || myform.controls['review_content'].errors?.required) && this.sumbit_btn_was_clicked ">
+            Pola nie mogą być puste, uzupełnij je!
+          </div>
+          <form class="mt-4 text-start form_styled"  novalidate [formGroup]="myform" (ngSubmit)="onSubmit()" >
+              <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.nick.invalid && myform.controls.nick.dirty" > 
+                  Niepoprawny nick lub pusty!
+              </div>
+              <div class="form-group m-3">
+                <label class="h3 mb-2" for="exampleFormControlInput1">Nick</label>
+                <input type="text" class="form-control form-control-lg p-2" id="nick_input" placeholder="nazwa uzytkownika" formControlName="nick" required>
+              </div>
+              <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.date.invalid && myform.controls.date.dirty" > 
+                Wybrana data jest niepoprawna, musi być nie pózniejsza niz dzis!
+              </div>
+              <div class="form-group m-3">
+                <label class="h3 mb-2" for="exampleFormControlInput1">Data zakupu</label>
+                <input type="date" class="form-control form-control-lg pe-2" id="date_input" formControlName="date">
+              </div>
+              <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.review_content.invalid && myform.controls.review_content.dirty" > 
+                Pole musi zawierać więcej niz 50 znakow, ale mniej niz 500!
+              </div>
+              <div class="form-group m-3">
+                <label class="h3 mb-2" for="exampleFormControlTextarea1">Wpisz treść swojej recenzji (minimum 50 znaków)</label>
+                <textarea class="form-control form-control-lg p-2" id="review_textarea_input" rows="3" formControlName="review_content" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-danger btn-lg w-100 mt-4" style="font-size:1.4rem">Dodaj opinię</button>        
+          </form>
+
+          <div class="row d-flex justify-content-center mt-5 comments_box" >
+              <div class="col-md-12col-lg-10" *ngFor="let review of this.dish_reviews">
+                <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                  <div class="card-body p-4">
+                    <div class="card mb-4">
+                      <div class="card-body">
+                        <p class="h4 p-2">{{ review.content }}</p>
+            
+                        <div class="d-flex justify-content-between mt-2">
+                          <div class="d-flex flex-row align-items-center">
+                            <p class="h4 mb-0 ms-2">{{review.nick}}&nbsp;<img src="../../../assets/bxs-user-pin.svg" alt="user icon"/></p>
+                          </div>
+                          <div class="h5 me-2">
+                            {{ review.date }}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                </div>
               </div>
-            </div>
-           
+            
 
-            <!-- <div class="col-md-12col-lg-10">
-              <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                <div class="card-body p-4">
-                  <div class="card mb-4">
-                    <div class="card-body">
-                      <p class="h4">Type your note, and hit enter to add it</p>
-          
-                      <div class="d-flex justify-content-between">
-                        <div class="d-flex flex-row align-items-center">
-                          <p class="h4 mb-0 ms-2">Martha</p>
+              <!-- <div class="col-md-12col-lg-10">
+                <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                  <div class="card-body p-4">
+                    <div class="card mb-4">
+                      <div class="card-body">
+                        <p class="h4">Type your note, and hit enter to add it</p>
+            
+                        <div class="d-flex justify-content-between">
+                          <div class="d-flex flex-row align-items-center">
+                            <p class="h4 mb-0 ms-2">Martha</p>
+                          </div>
                         </div>
                       </div>
                     </div>
+                </div>
+              </div> -->
+              <!-- <div class="col-md-12col-lg-10">
+                  <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                    <div class="card-body p-4">
+                      <div class="card mb-4">
+                        <div class="card-body">
+                          <p>Type your note, and hit enter to add it</p>
+              
+                          <div class="d-flex justify-content-between">
+                            <div class="d-flex flex-row align-items-center">
+                              <p class="small mb-0 ms-2">Martha</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                   </div>
-              </div>
+                </div>
+                <div class="col-md-12col-lg-10">
+                  <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                    <div class="card-body p-4">
+                      <div class="card mb-4">
+                        <div class="card-body">
+                          <p>Type your note, and hit enter to add it</p>
+              
+                          <div class="d-flex justify-content-between">
+                            <div class="d-flex flex-row align-items-center">
+                              <p class="small mb-0 ms-2">Martha</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              <div class="col-md-12col-lg-10">
+                  <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                    <div class="card-body p-4">
+                      <div class="card mb-4">
+                        <div class="card-body">
+                          <p>Type your note, and hit enter to add it</p>
+              
+                          <div class="d-flex justify-content-between">
+                            <div class="d-flex flex-row align-items-center">
+                              <p class="small mb-0 ms-2">Martha</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-md-12col-lg-10">
+                  <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                    <div class="card-body p-4">
+                      <div class="card mb-4">
+                        <div class="card-body">
+                          <p>Type your note, and hit enter to add it</p>
+              
+                          <div class="d-flex justify-content-between">
+                            <div class="d-flex flex-row align-items-center">
+                              <p class="small mb-0 ms-2">Martha</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
             </div> -->
-            <!-- <div class="col-md-12col-lg-10">
-                <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                  <div class="card-body p-4">
-                    <div class="card mb-4">
-                      <div class="card-body">
-                        <p>Type your note, and hit enter to add it</p>
-            
-                        <div class="d-flex justify-content-between">
-                          <div class="d-flex flex-row align-items-center">
-                            <p class="small mb-0 ms-2">Martha</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="col-md-12col-lg-10">
-                <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                  <div class="card-body p-4">
-                    <div class="card mb-4">
-                      <div class="card-body">
-                        <p>Type your note, and hit enter to add it</p>
-            
-                        <div class="d-flex justify-content-between">
-                          <div class="d-flex flex-row align-items-center">
-                            <p class="small mb-0 ms-2">Martha</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-              </div>
-            <div class="col-md-12col-lg-10">
-                <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                  <div class="card-body p-4">
-                    <div class="card mb-4">
-                      <div class="card-body">
-                        <p>Type your note, and hit enter to add it</p>
-            
-                        <div class="d-flex justify-content-between">
-                          <div class="d-flex flex-row align-items-center">
-                            <p class="small mb-0 ms-2">Martha</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="col-md-12col-lg-10">
-                <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                  <div class="card-body p-4">
-                    <div class="card mb-4">
-                      <div class="card-body">
-                        <p>Type your note, and hit enter to add it</p>
-            
-                        <div class="d-flex justify-content-between">
-                          <div class="d-flex flex-row align-items-center">
-                            <p class="small mb-0 ms-2">Martha</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-              </div>
-          </div> -->
-    </div>
+      </div>
+  </div>
 </div>
+

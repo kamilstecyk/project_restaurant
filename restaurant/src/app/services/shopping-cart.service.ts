@@ -90,7 +90,7 @@ export class ShoppingCartService {
     this.currently_all_ordered_dishes.next(this.getAllOrdersCount());
   }
 
-  getDishAvailableCountFromId(id: number)
+  getDishAvailableCountFromId(id: number| null)
 :number  {
     for(var record of this.ordered_dishes)
     {
@@ -105,7 +105,7 @@ export class ShoppingCartService {
     return -1;
   }
 
-  getHowManyOrderedFromId(id: number):number
+  getHowManyOrderedFromId(id: number | null):number
   {
     for(var record of this.ordered_dishes)
     {

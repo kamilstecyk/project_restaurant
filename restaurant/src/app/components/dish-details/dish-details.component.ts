@@ -14,7 +14,7 @@ import { RatingService, Review, DishReviewRecord, DishRatingRecord } from 'src/a
   styleUrls: ['./dish-details.component.sass']
 })
 export class DishDetailsComponent {
-  dish_object:Dish | null;
+  dish_object:Dish | null = null;
   given_id_of_object: number | null= -1;
 
   is_ingredient_list_extended = false;
@@ -22,6 +22,7 @@ export class DishDetailsComponent {
   currently_available:number = 0;
 
   imagesObjectArray:Object[] = []
+  slider_width_of_imgs: string = "";
 
   // review form
   myform: any; 
@@ -31,38 +32,28 @@ export class DishDetailsComponent {
   current_dish_reviews_subscription: any;
   dish_reviews: Review[] | any;
 
+  current_dishes_data_subscirption: any;
+  downloading_dish = true;
+
   constructor(private menu_data_service:MenuDataService, private activated_route:ActivatedRoute, public price_transforming_service: PriceTransformingService, private shooping_cart_service: ShoppingCartService, private router: Router, private rating_service: RatingService)
   {
     this.given_id_of_object = Number(this.activated_route.snapshot.paramMap.get('id'));
-    this.dish_object  = menu_data_service.getDishWithId(this.given_id_of_object);
-    console.log("Dish object details");
-    console.log(this.given_id_of_object);
-    console.log(this.dish_object?.imgs_paths);
 
-    if(this.dish_object != null )
-    {
-      this.dish_object.imgs_paths.forEach(img_path => 
-        {
-          
-          var img_object = {image: img_path, thumbImage: img_path};
-          this.imagesObjectArray.push(img_object);
-          
-        });
-      }
+    this.fetchDishDetails();
   }
 
   ngOnInit()
   {
     if(this.dish_object != null)
     {
-      this.currently_available = this.shooping_cart_service.getDishAvailableCountFromId(this.dish_object.id);
+      this.currently_available = this.shooping_cart_service.getDishAvailableCountFromId(this.given_id_of_object);
       if(this.currently_available == -1 )
       {
         this.currently_available = this.dish_object.available_count;
       }
 
-      this.order_count = this.shooping_cart_service.getHowManyOrderedFromId(this.dish_object.id);
-      this.dish_reviews = this.rating_service.getDishReviews(this.dish_object.id);
+      this.order_count = this.shooping_cart_service.getHowManyOrderedFromId(this.given_id_of_object);
+      this.dish_reviews = this.rating_service.getDishReviews(this.given_id_of_object);
 
       this.current_dish_reviews_subscription = this.rating_service.getCurrentReviewsDish().subscribe((value)=>
       {
@@ -79,6 +70,12 @@ export class DishDetailsComponent {
       date: new FormControl('', [this.dateValidator()]),
       review_content: new FormControl('', [this.reviewContentValidator(), Validators.required]),
     });
+  }
+
+  ngOnDestroy()
+  {
+    this.current_dishes_data_subscirption.unsubscribe();
+    // this.current_dish_reviews_subscription.unsubscribe();
   }
 
   onSubmit()
@@ -238,5 +235,61 @@ export class DishDetailsComponent {
   backToDishes()
   {
     this.router.navigate(['/potrawy']);
+  }
+
+  private fetchDishDetails()
+  {
+    this.current_dishes_data_subscirption = this.menu_data_service.getDishes().subscribe((value) => 
+    {
+      const dishes_data: Array<Dish>  = Object.assign([], value) as  Array<Dish>;
+      this.dish_object = null;
+      
+      for(var dish of dishes_data)
+      {
+        // console.log("Dish iterating id: " + dish.id);
+
+        if(dish.id === this.given_id_of_object )
+        {
+          this.dish_object = dish;
+        }
+      }
+
+      // console.log("Dish object details");
+      // console.log(this.given_id_of_object);
+      // console.log(this.dish_object?.imgs_paths);
+
+      console.log("Images object array: -<<<<<<<<<<");
+      console.log(this.imagesObjectArray)
+      this.imagesObjectArray = [];
+
+      if(this.dish_object != null )
+      {
+        this.dish_object.imgs_paths.forEach(img_path => 
+          {
+            
+            var img_object = {image: img_path, thumbImage: img_path};
+            this.imagesObjectArray.push(img_object);
+            
+          });
+        }
+
+        this.slider_width_of_imgs = this.getWidthOfImgsInSlider(this.imagesObjectArray.length);
+        this.downloading_dish = false;
+    });
+  }
+
+  private getWidthOfImgsInSlider(count_of_imgs: number)
+  {
+    switch(count_of_imgs)
+    {
+      case 1:
+        return '75%';
+      case 2:
+        return '50%';
+      case 3: 
+        return '33%';
+      default:
+        return '25%';
+    }
   }
 }
