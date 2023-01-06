@@ -1,14 +1,32 @@
-<div class="start_part">
+<div class="alert alert-light w-75 p-3" role="alert" style="margin-left: auto; margin-right: auto;margin-top: 10rem;" *ngIf="this.dish_object == null" >
+  <h4 class="alert-heading">Brak takiego dania</h4>
+  <p>Aby uzyskać rezultaty, przejdź do zakładki dodaj danie, aby dodać wybraną potrawę. Następnie mozesz wrócic tutaj z powrotem, aby podglądnąć dania.</p>
+  <hr>
+  <button class="btn btn-danger btn-lg p-2 mt-2"><a style="text-decoration:none; color:black;" routerLink="/dodaj-danie">Przejdź do dań</a>
+  </button>
+</div>
+<div class="start_part" *ngIf="this.dish_object != null">
   <div class="flex_center_row header_title">
       <h1 class="text-center m-5 font-weight-bold text-uppercase">Szczegóły dania</h1>
       <button class="btn btn-lg btn-danger button" (click)="backToDishes()">Wróć do listy dań</button>
   </div>
-  <div class="slider_images">
+  <div class="flex_center_row" *ngIf="this.imagesObjectArray.length == 1">
+    <a href="{{this.dish_object.imgs_paths[0]}}" target="_blank" style="width: 45%; height: 300px"><img src="{{this.dish_object.imgs_paths[0]}}" alt="Dish Image" style="width: 100%; height: 100%"></a>
+  </div>
+  <div class="slider_images" *ngIf="this.imagesObjectArray.length > 1 && this.imagesObjectArray.length < 4" >
     <ng-image-slider #nav
       [images]="this.imagesObjectArray"
-      [infinite]="false"
       [autoSlide]="1"
-      [imageSize]="{width: '30%', height: 300}"
+      [imageSize]="{width: this.slider_width_of_imgs, height: 300}"
+      slideImage="1"></ng-image-slider>
+  </div>
+  <div class="slider_images" *ngIf="this.imagesObjectArray.length >= 4">
+    <ng-image-slider #nav
+      [images]="this.imagesObjectArray"
+      [infinite]="true"
+      [videoAutoPlay]="true"
+      [autoSlide]="1"
+      [imageSize]="{width: '25%', height: 300}"
       slideImage="1"></ng-image-slider>
   </div>
 </div>

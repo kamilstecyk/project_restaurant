@@ -22,6 +22,7 @@ export class DishDetailsComponent {
   currently_available:number = 0;
 
   imagesObjectArray:Object[] = []
+  slider_width_of_imgs: string = "";
 
   // review form
   myform: any; 
@@ -47,6 +48,8 @@ export class DishDetailsComponent {
             this.imagesObjectArray.push(img_object);
           }
         });
+
+        this.slider_width_of_imgs = this.getWidthOfImgsInSlider(this.dish_object.imgs_paths.length);
       }
   }
 
@@ -237,5 +240,20 @@ export class DishDetailsComponent {
   backToDishes()
   {
     this.router.navigate(['/potrawy']);
+  }
+
+  private getWidthOfImgsInSlider(count_of_imgs: number)
+  {
+    switch(count_of_imgs)
+    {
+      case 1:
+        return '75%';
+      case 2:
+        return '50%';
+      case 3: 
+        return '33%';
+      default:
+        return '25%';
+    }
   }
 }
