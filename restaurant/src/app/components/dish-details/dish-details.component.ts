@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { RatingService, Review, DishReviewRecord, DishRatingRecord } from 'src/app/services/rating.service';
+import { map } from 'rxjs';
 @Component({
   selector: 'app-dish-details',
   templateUrl: './dish-details.component.html',
@@ -29,7 +30,6 @@ export class DishDetailsComponent {
   sumbit_btn_was_clicked = false;
 
   // reviews 
-  current_dish_reviews_subscription: any;
   dish_reviews: Review[] | any;
 
   current_dishes_data_subscirption: any;
@@ -40,30 +40,12 @@ export class DishDetailsComponent {
     this.given_id_of_object = Number(this.activated_route.snapshot.paramMap.get('id'));
 
     this.fetchDishDetails();
+    this.fetchDishReviews();
   }
 
   ngOnInit()
   {
-    if(this.dish_object != null)
-    {
-      this.currently_available = this.shooping_cart_service.getDishAvailableCountFromId(this.given_id_of_object);
-      if(this.currently_available == -1 )
-      {
-        this.currently_available = this.dish_object.available_count;
-      }
-
-      this.order_count = this.shooping_cart_service.getHowManyOrderedFromId(this.given_id_of_object);
-      this.dish_reviews = this.rating_service.getDishReviews(this.given_id_of_object);
-
-      this.current_dish_reviews_subscription = this.rating_service.getCurrentReviewsDish().subscribe((value)=>
-      {
-        value = value as Review[];
-        this.dish_reviews = value;
-      });
-    }
-
     // form 
-
     this.myform = new FormGroup({
       
       nick: new FormControl('', [this.nickValidator(), Validators.required]), 
@@ -75,7 +57,6 @@ export class DishDetailsComponent {
   ngOnDestroy()
   {
     this.current_dishes_data_subscirption.unsubscribe();
-    // this.current_dish_reviews_subscription.unsubscribe();
   }
 
   onSubmit()
@@ -237,6 +218,21 @@ export class DishDetailsComponent {
     this.router.navigate(['/potrawy']);
   }
 
+  getMoreDishInfo()
+  {
+    if(this.dish_object != null)
+    {
+      this.currently_available = this.shooping_cart_service.getDishAvailableCountFromId(this.given_id_of_object);
+        if(this.currently_available == -1 )
+        {
+          this.currently_available = this.dish_object.available_count;
+        }
+
+        this.order_count = this.shooping_cart_service.getHowManyOrderedFromId(this.given_id_of_object);
+        this.dish_reviews = this.rating_service.getDishReviews(this.given_id_of_object);
+    }
+  }
+
   private fetchDishDetails()
   {
     this.current_dishes_data_subscirption = this.menu_data_service.getDishes().subscribe((value) => 
@@ -275,7 +271,39 @@ export class DishDetailsComponent {
 
         this.slider_width_of_imgs = this.getWidthOfImgsInSlider(this.imagesObjectArray.length);
         this.downloading_dish = false;
+
+        this.getMoreDishInfo();
     });
+  }
+
+  private fetchDishReviews()
+  {
+    this.rating_service.getUserReviews().snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, ...c.payload.val() })
+        )
+      )
+    ).subscribe(data => 
+      {
+        this.dish_reviews = []
+
+        data.forEach(record => {
+          if(record.dishId != null && record.key != null && record.reviews != null)
+          {
+            if(record.dishId == this.given_id_of_object)
+            {
+              record.reviews.forEach((review)=>
+              {
+                this.dish_reviews.push({nick : review.nick,
+                  date : review.date,
+                  content : review.content});
+              });
+            }
+          }
+        });
+      }
+    );
   }
 
   private getWidthOfImgsInSlider(count_of_imgs: number)

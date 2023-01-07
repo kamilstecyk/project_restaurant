@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 import { RatingService, DishRatingRecord } from 'src/app/services/rating.service';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-star-rating',
@@ -8,6 +9,7 @@ import { RatingService, DishRatingRecord } from 'src/app/services/rating.service
   styleUrls: ['./star-rating.component.sass']
 })
 export class StarRatingComponent {
+  private current_dish_rating: DishRatingRecord | null = null;
 
   stars: number[] = [1, 2, 3, 4, 5];
   selectedValue: number = 0;
@@ -17,13 +19,7 @@ export class StarRatingComponent {
   current_rating_subscription: any;
   was_rated = false;
 
-  constructor(private rating_service: RatingService)
-  {
-    this.current_rating_subscription = rating_service.getCurrentRatingDish().subscribe((value)=>
-    {
-      this.number_of_reviews = (value as DishRatingRecord).numberOfReviews;
-    });
-  }
+  constructor(private rating_service: RatingService){}
 
   ngAfterViewInit()
   {
@@ -32,13 +28,29 @@ export class StarRatingComponent {
 
   setInitialRating()
   {
-    var rating_record_of_dish = this.rating_service.getCurrentRatingAndNumberOfRewivesOfDishFromId(this.product_id) as DishRatingRecord;
+    this.rating_service.getAllStarRatings().snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ key: c.payload.key, ...c.payload.val() })
+        )
+      )
+    ).subscribe(data => 
+      {
 
-    if(rating_record_of_dish != null)
-    {
-      this.addClass(rating_record_of_dish.averageStarRate);
-      this.number_of_reviews = rating_record_of_dish.numberOfReviews;
-    }
+        data.forEach(record => {
+          if(record.averageStarRate != null && record.dishId != null && record.numberOfReviews != null && record.sumRating != null)
+          {
+            if(record.dishId == this.product_id)
+            {
+              this.current_dish_rating = {key: record.key, dishId: record.dishId, averageStarRate: record.averageStarRate, numberOfReviews: record.numberOfReviews, sumRating: record.sumRating};
+
+              this.addClass(this.current_dish_rating.averageStarRate);
+              this.number_of_reviews = this.current_dish_rating.numberOfReviews;
+            }
+          }
+        });
+      }
+    );
   }
 
   countStarAndRate(star:any) {
@@ -61,10 +73,5 @@ export class StarRatingComponent {
       ab = "starId" + i + this.product_id;
       document.getElementById(ab)?.classList.remove("selected");
     }
-  }
-
-  ngOnDestroy()
-  {
-    this.current_rating_subscription.unsubscribe();
   }
 }
