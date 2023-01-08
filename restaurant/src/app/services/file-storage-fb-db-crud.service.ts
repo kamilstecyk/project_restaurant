@@ -51,4 +51,29 @@ export class FileStorageFbDbCrudService {
     this.how_many_to_upload = 0;
     this.number_of_uploaded = 0;
   }
+
+  public getBasePathToStorage()
+  {
+    return this.basePath;
+  }
+
+  public getFileRelativePathInStorage(full_path_to_file: string): string
+  {
+        const regexp = /\/uploads.*\?/;
+        const match = full_path_to_file.match(regexp);
+
+        let relative_path_to_img = "";
+
+        if(match != null)
+        {
+          relative_path_to_img = match[0];
+        }
+
+        // change %2f to / and delete ? at the end
+
+        relative_path_to_img = relative_path_to_img.replace("%2F", "/").slice(0, -1);
+        // console.log("Mathcing path of img: " + relative_path_to_img);
+        
+        return relative_path_to_img;
+  }
 }

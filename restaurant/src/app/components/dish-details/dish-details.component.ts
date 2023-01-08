@@ -254,8 +254,6 @@ export class DishDetailsComponent {
       // console.log(this.given_id_of_object);
       // console.log(this.dish_object?.imgs_paths);
 
-      console.log("Images object array: -<<<<<<<<<<");
-      console.log(this.imagesObjectArray)
       this.imagesObjectArray = [];
 
       if(this.dish_object != null )

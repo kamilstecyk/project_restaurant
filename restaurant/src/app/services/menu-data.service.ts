@@ -4,6 +4,8 @@ import { dishes, Dish } from '../dishes';
 import { DishRecord } from './shopping-cart.service';
 import { FirebaseCrudDbOperationsService } from './firebase-crud-db-operations.service';
 import { map } from 'rxjs';
+import { FileStorageFbDbCrudService } from './file-storage-fb-db-crud.service';
+import { getStorage, ref, deleteObject } from "firebase/storage";
 @Injectable({
   providedIn: 'root'
 })
@@ -25,8 +27,7 @@ export class MenuDataService {
   private min_price: number = 0;
   private categories_of_dishes: Array<string> = []
 
-
-  constructor(private db_service: FirebaseCrudDbOperationsService) 
+  constructor(private db_service: FirebaseCrudDbOperationsService, private fire_storage_service: FileStorageFbDbCrudService) 
   {
 
     db_service.getAllDishes().snapshotChanges().pipe(
@@ -198,21 +199,27 @@ export class MenuDataService {
 
   removeDishFromMenu(dish_to_delete: Dish)
   {
-    // this.menu_dishes.forEach( (item, index) => {
-    //   if(item === dish_to_delete) 
-    //   {
-    //     this.menu_dishes.splice(index,1);
-    //     console.log("Usunieto danie!");
-    //   }
-    // });
-    // this.getAndSendDataToSubjects();
-
-
-    // this.db_service.deleteDish
-
     if(dish_to_delete.key)
     {
       this.db_service.deleteDish(dish_to_delete.key).then(()=>
+      {
+        const storage = getStorage();
+
+        dish_to_delete.imgs_paths.forEach((full_img_path)=>
+        {
+          const relative_path_to_img = this.fire_storage_service.getFileRelativePathInStorage(full_img_path);
+
+           // Create a reference to the file to delete
+           const fileRef = ref(storage, relative_path_to_img);
+
+           // Delete the file
+           deleteObject(fileRef).then(() => {
+              console.log("Delete: " + relative_path_to_img + " success");
+            }).catch((error) => {
+              console.log("Delete: " + relative_path_to_img + " error");
+            });
+        })
+      }).then(()=>
       {
         alert("Pomyślnie usunięto danie z menu!");
       }).catch(err =>
@@ -294,5 +301,4 @@ export class MenuDataService {
 
     this.getAndSendDataToSubjects();
   }
-
 }
