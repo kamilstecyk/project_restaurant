@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BuyingService, HistoryRecord } from 'src/app/services/buying.service';
 import { PriceTransformingService } from 'src/app/services/price-transforming.service';
 import { map } from 'rxjs';
@@ -8,7 +8,7 @@ import { map } from 'rxjs';
   templateUrl: './shopping-history.component.html',
   styleUrls: ['./shopping-history.component.sass']
 })
-export class ShoppingHistoryComponent {
+export class ShoppingHistoryComponent implements OnInit {
   ordered_dishes: HistoryRecord[] = [];
   downloading_dishes_history = true;
 
@@ -24,6 +24,7 @@ export class ShoppingHistoryComponent {
       )
     ).subscribe(data => 
       {
+        this.downloading_dishes_history = true;
         this.ordered_dishes = [];
 
         data.forEach((history_record)=>
@@ -50,5 +51,16 @@ export class ShoppingHistoryComponent {
           this.downloading_dishes_history = false;
         });
       });
+  }
+
+  ngOnInit(): void {
+      setTimeout(()=>
+      {
+        if(this.ordered_dishes.length == 0)
+        {
+          this.downloading_dishes_history = false;
+          console.log("There is no history of orders in db");
+        }
+      }, 2000);
   }
 }

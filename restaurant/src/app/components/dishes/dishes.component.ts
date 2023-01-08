@@ -88,12 +88,18 @@ export class DishesComponent {
     var x = window.matchMedia("(max-width: 600px)")
     this.changeItemsPerPageIfItIsPhone(x)
 
-    console.log("Invoking after navigating...!!!");
   } 
 
   ngOnInit()
   {
-    // this.dishes_data = this.menu_data_service.getDishes();
+    setTimeout(()=>
+    {
+      if(this.dishes_data.length == 0)
+      {
+        this.downloading_dishes = false;
+        console.log("There is no dish in db");
+      }
+    }, 2000);
   }
 
   ngOnDestroy() {
