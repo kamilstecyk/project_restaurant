@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { AfterViewInit, Component } from '@angular/core'
 import { Input } from '@angular/core';
 import { PriceTransformingService } from 'src/app/services/price-transforming.service';
 import { MenuDataService } from 'src/app/services/menu-data.service';
@@ -15,7 +15,9 @@ export class DishComponent {
 
   @Input() dish_object: any;
   @Input() object_index?:number;
-
+  @Input() most_expensive_dish_price:number;
+  @Input() cheapest_dish_price: number;
+ 
   constructor(public price_transforming_service: PriceTransformingService, private menu_data_service: MenuDataService, private shooping_cart_service: ShoppingCartService){}
 
   ngOnInit()

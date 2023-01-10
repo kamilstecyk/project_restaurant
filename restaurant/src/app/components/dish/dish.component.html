@@ -1,4 +1,4 @@
-<div class="dish_wrapper flex_center_col" [style.border]=" dish_object.price > 26 ? '3px solid lightgreen' : '3px solid red' ">
+<div class="dish_wrapper flex_center_col" [style.border]=" dish_object.price == this.cheapest_dish_price ? '3px solid lightgreen' : ( dish_object.price == this.most_expensive_dish_price ? '3px solid red' : '') ">
     <div class="dish_main_img flex_center_row">
         <a [routerLink]="['/szczegoly-dania', dish_object.id]">
             <img src='{{ (dish_object.imgs_paths.length > 0) ? dish_object.imgs_paths[0] : "../../../assets/no_photo.png" }}' alt="Dish photo" />

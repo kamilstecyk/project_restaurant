@@ -12,7 +12,7 @@
     <app-filtering></app-filtering>
     <div class="dishes_container">
         <app-dish *ngFor="let dish of dishes_data | dishesFilter:this.cuisine_types_checked:'cuisine_type' | dishesFilter:this.dishes_categories_checked:'category' | minMaxFiltering:this.min_value_chosen:this.max_value_chosen | starRatingFilter:this.stars_rating_checked | paginate: { itemsPerPage: tableSize,
-            currentPage: page }, let index = index" [dish_object]="dish" [object_index]="index"> 
+            currentPage: page }, let index = index" [dish_object]="dish" [object_index]="index" [most_expensive_dish_price]="this.most_expensive_dish_price" [cheapest_dish_price]="this.cheapest_dish_price"> 
         </app-dish>
     </div>
     <div class="flex_center_col">

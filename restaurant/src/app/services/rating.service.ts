@@ -8,7 +8,6 @@ export interface DishRatingRecord
   dishId: number,
   averageStarRate: number,
   numberOfReviews: number,
-  sumRating: number
 }
 
 export interface Review 
@@ -54,9 +53,9 @@ export class RatingService {
         this.dishes_ratings = []
 
         data.forEach(record => {
-          if(record.averageStarRate != null && record.dishId != null && record.numberOfReviews != null && record.sumRating != null)
+          if(record.averageStarRate != null && record.dishId != null && record.numberOfReviews != null )
           {
-            this.dishes_ratings.push({key: record.key, dishId: record.dishId, averageStarRate: record.averageStarRate, numberOfReviews: record.numberOfReviews, sumRating: record.sumRating});
+            this.dishes_ratings.push({key: record.key, dishId: record.dishId, averageStarRate: record.averageStarRate, numberOfReviews: record.numberOfReviews});
           }
         });
       }
@@ -108,15 +107,21 @@ export class RatingService {
     {
       if(record.dishId == id)
       {
-        record.sumRating += number_of_stars;
+        // record.sumRating += number_of_stars;
+        // ++record.numberOfReviews;
+        // record.averageStarRate = Math.ceil(record.sumRating / record.numberOfReviews);
+        // console.log(record.averageStarRate);
+
+        const average_star_rating = ( record.averageStarRate * record.numberOfReviews + number_of_stars) / ( record.numberOfReviews + 1 );
+        const average_star_rating_rounded = Number(average_star_rating.toFixed(2));
+
         ++record.numberOfReviews;
-        record.averageStarRate = Math.ceil(record.sumRating / record.numberOfReviews);
-        console.log(record.averageStarRate);
+        record.averageStarRate = average_star_rating_rounded;
         
         was_founded = true;
         if(record.key)
         {
-          this.updateStarRating(record.key, {sumRating: record.sumRating, numberOfReviews: record.numberOfReviews, averageStarRate: record.averageStarRate})
+          this.updateStarRating(record.key, {numberOfReviews: record.numberOfReviews, averageStarRate: record.averageStarRate})
         }
 
         break;
@@ -125,9 +130,9 @@ export class RatingService {
 
     if(was_founded == false)
     {
-      this.dishes_ratings.push({dishId: id, averageStarRate: number_of_stars, numberOfReviews: 1, sumRating: number_of_stars});
+      this.dishes_ratings.push({dishId: id, averageStarRate: number_of_stars, numberOfReviews: 1});
 
-      this.createStarRating({dishId: id, averageStarRate: number_of_stars, numberOfReviews: 1, sumRating: number_of_stars});
+      this.createStarRating({dishId: id, averageStarRate: number_of_stars, numberOfReviews: 1});
     }
   }
 

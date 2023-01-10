@@ -35,6 +35,9 @@ export class DishesComponent {
 
   downloading_dishes = true;
 
+  most_expensive_dish_price: number;
+  cheapest_dish_price: number;
+
   fetchDishes(): void {
     this.current_dishes_data_subscirption = this.menu_data_service.getDishes().subscribe((value) => 
     {
@@ -44,6 +47,9 @@ export class DishesComponent {
       console.log("Got fetch dishes: ");
       console.log(this.dishes_data);
       this.downloading_dishes = false;
+
+      this.most_expensive_dish_price = Math.max(...this.dishes_data.map(dish => dish.price));
+      this.cheapest_dish_price = Math.min(...this.dishes_data.map(dish => dish.price));
     });
   }
 

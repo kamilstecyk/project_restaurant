@@ -5,8 +5,9 @@
              (mouseover)="addClass(star)" (mouseout)="removeClass(star)"> ★
             </li>
         </ol>
-       <div class="ms-4 h3 info_number">
-            ({{this.number_of_reviews}})
+       <div class="ms-4 h3 info_number flex_center_col">
+            <span class="mb-1 text-warning">{{this.getCurrentDishRating()}}</span>
+            <span style="font-size: 1.3rem;">({{this.number_of_reviews}})</span>
         </div>
     </div>
 </div>

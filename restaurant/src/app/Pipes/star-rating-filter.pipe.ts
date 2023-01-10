@@ -21,9 +21,9 @@ export class StarRatingFilterPipe implements PipeTransform {
         this.dishes_ratings = []
 
         data.forEach(record => {
-          if(record.averageStarRate != null && record.dishId != null && record.numberOfReviews != null && record.sumRating != null)
+          if(record.averageStarRate != null && record.dishId != null && record.numberOfReviews != null )
           {
-            this.dishes_ratings.push({key: record.key, dishId: record.dishId, averageStarRate: record.averageStarRate, numberOfReviews: record.numberOfReviews, sumRating: record.sumRating});
+            this.dishes_ratings.push({key: record.key, dishId: record.dishId, averageStarRate: record.averageStarRate, numberOfReviews: record.numberOfReviews});
           }
         });
       }

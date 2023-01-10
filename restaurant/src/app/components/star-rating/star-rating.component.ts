@@ -38,13 +38,13 @@ export class StarRatingComponent {
       {
 
         data.forEach(record => {
-          if(record.averageStarRate != null && record.dishId != null && record.numberOfReviews != null && record.sumRating != null)
+          if(record.averageStarRate != null && record.dishId != null && record.numberOfReviews != null)
           {
             if(record.dishId == this.product_id)
             {
-              this.current_dish_rating = {key: record.key, dishId: record.dishId, averageStarRate: record.averageStarRate, numberOfReviews: record.numberOfReviews, sumRating: record.sumRating};
+              this.current_dish_rating = {key: record.key, dishId: record.dishId, averageStarRate: record.averageStarRate, numberOfReviews: record.numberOfReviews};
 
-              this.addClass(this.current_dish_rating.averageStarRate);
+              this.addClass(Math.ceil(this.current_dish_rating.averageStarRate));
               this.number_of_reviews = this.current_dish_rating.numberOfReviews;
             }
           }
@@ -73,5 +73,10 @@ export class StarRatingComponent {
       ab = "starId" + i + this.product_id;
       document.getElementById(ab)?.classList.remove("selected");
     }
+  }
+
+  getCurrentDishRating()
+  {
+    return this.current_dish_rating?.averageStarRate.toFixed(2);
   }
 }
