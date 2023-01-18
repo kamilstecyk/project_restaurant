@@ -1,4 +1,4 @@
-<form>
+<form [noValidate]="false" (ngSubmit)="this.onSubmit($event, username.value, password.value)">
     <section class="vh-100 gradient-custom">
         <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -12,12 +12,12 @@
                     <p class="text-white-50 mb-5">Wpisz swój nowy email oraz hasło!</p>
     
                     <div class="form-outline form-white mb-4">
-                    <input type="email" id="typeEmailX" class="form-control form-control-lg" />
+                    <input type="email" id="typeEmailX" class="ps-3 pe-3 form-control form-control-lg" required #username />
                     <label class="form-label" for="typeEmailX">Email</label>
                     </div>
     
                     <div class="form-outline form-white mb-4">
-                    <input type="password" id="typePasswordX" class="form-control form-control-lg" />
+                    <input type="password" id="typePasswordX" class="ps-3 pe-3 form-control form-control-lg" required #password/>
                     <label class="form-label" for="typePasswordX">Hasło</label>
                     </div>
     

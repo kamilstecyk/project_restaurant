@@ -30,6 +30,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component'
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AuthService } from "./shared/services/auth.service";
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -61,6 +64,7 @@ const firebaseConfig = {
     StarRatingFilterPipe,
     LoginComponent,
     RegisterComponent,
+    ForgotPasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -74,11 +78,12 @@ const firebaseConfig = {
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule,
     AngularFireStorageModule,
+    AngularFireAuthModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     MatProgressBarModule
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

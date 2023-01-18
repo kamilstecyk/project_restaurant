@@ -3,12 +3,13 @@
       <a class="navbar-brand" routerLink="/" style="border-right: 3px solid rgba(0,0,0,0.3); padding-right: 0.5rem;">Do syta <img src="../../../assets/bx-fork.svg" alt="brand icon"/></a>
       <div class="d-flex order-lg-1 ms-auto pe-2 me-2">
         <ul class="navbar-nav flex-row">
-          <a class="nav-link" routerLinkActive="myactive" routerLink="/register">Zarejestruj</a>
-          <a class="nav-link ms-2" routerLinkActive="myactive" routerLink="/login">Zaloguj</a>
-          <a class="nav-link ms-2 icon" routerLinkActive="myactive" > <img src="../../../assets/bx-log-out (2).svg" alt="logout icon"/> </a>
+          <a class="nav-link" *ngIf="!this.authService.isLoggedIn" routerLinkActive="myactive" routerLink="/register">Zarejestruj</a>
+          <a class="nav-link ms-2" *ngIf="!this.authService.isLoggedIn" routerLinkActive="myactive" routerLink="/login">Zaloguj</a>
+          <h4 *ngIf="this.authService.isLoggedIn" class="pt-2">{{this.currently_logged_user_mail != null ? this.currently_logged_user_mail : ''}}</h4>
+          <a class="nav-link ms-2 icon" *ngIf="this.authService.isLoggedIn" routerLinkActive="myactive" (click)="this.authService.SignOut()" > <img src="../../../assets/bx-log-out (2).svg" alt="logout icon"/> </a>
         </ul>
       </div>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
