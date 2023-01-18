@@ -1,18 +1,23 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
       <a class="navbar-brand" routerLink="/" style="border-right: 3px solid rgba(0,0,0,0.3); padding-right: 0.5rem;">Do syta <img src="../../../assets/bx-fork.svg" alt="brand icon"/></a>
+      <div class="d-flex order-lg-1 ms-auto pe-2 me-2">
+        <ul class="navbar-nav flex-row">
+          <a class="nav-link" routerLinkActive="myactive" routerLink="/register">Zarejestruj</a>
+          <a class="nav-link ms-2" routerLinkActive="myactive" routerLink="/login">Zaloguj</a>
+          <a class="nav-link ms-2 icon" routerLinkActive="myactive" > <img src="../../../assets/bx-log-out (2).svg" alt="logout icon"/> </a>
+        </ul>
+      </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
+        <div class="navbar-nav me-auto">
           <!-- <a class="nav-link" routerLinkActive="myactive" aria-current="page" routerLink="/" [routerLinkActiveOptions]="{exact: true}">Strona Główna</a> -->
           <a class="nav-link" routerLinkActive="myactive" routerLink="/potrawy">Potrawy</a>
           <a class="nav-link" routerLinkActive="myactive" routerLink="/koszyk">Koszyk <span class="badge ms-1 {{ current_number_of_ordered_dishes > 10 ? 'bg-primary' : 'bg-warning' }}" *ngIf="current_number_of_ordered_dishes > 0">{{current_number_of_ordered_dishes}}</span></a>
           <a class="nav-link" routerLinkActive="myactive" routerLink="/dodaj-danie">Dodaj Danie</a>
           <a class="nav-link" routerLinkActive="myactive" routerLink="/historia">Historia zakupów</a>
-          <a class="nav-link" routerLinkActive="myactive" routerLink="/register">Zarejestruj</a>
-          <a class="nav-link" routerLinkActive="myactive" routerLink="/login">Zaloguj</a>
         </div>
       </div>
     </div>
