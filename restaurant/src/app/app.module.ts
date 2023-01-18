@@ -27,7 +27,9 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatProgressBarModule } from '@angular/material/progress-bar'
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component'
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -57,6 +59,8 @@ const firebaseConfig = {
     DishDetailsComponent,
     ShoppingHistoryComponent,
     StarRatingFilterPipe,
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
