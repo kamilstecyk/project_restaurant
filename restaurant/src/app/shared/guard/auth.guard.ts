@@ -25,6 +25,8 @@ export class AuthGuard implements CanActivate {
     if(this.authService.isLoggedIn !== true)
     {
       this.router.navigate(['/']);
+      console.log("Started path: ");
+      console.log(state.url);
       return false;
     }
     

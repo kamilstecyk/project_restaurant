@@ -3,6 +3,8 @@ import { Input } from '@angular/core';
 import { PriceTransformingService } from 'src/app/services/price-transforming.service';
 import { MenuDataService } from 'src/app/services/menu-data.service';
 import { ShoppingCartService } from 'src/app/services/shopping-cart.service';
+import { AuthorizationService } from 'src/app/shared/services/authorization.service';
+import { Role } from 'src/app/shared/services/user';
 @Component({
   selector: 'app-dish',
   templateUrl: './dish.component.html',
@@ -18,7 +20,7 @@ export class DishComponent {
   @Input() most_expensive_dish_price:number;
   @Input() cheapest_dish_price: number;
  
-  constructor(public price_transforming_service: PriceTransformingService, private menu_data_service: MenuDataService, private shooping_cart_service: ShoppingCartService){}
+  constructor(public price_transforming_service: PriceTransformingService, private menu_data_service: MenuDataService, private shooping_cart_service: ShoppingCartService, public authorizationService: AuthorizationService){}
 
   ngOnInit()
   {

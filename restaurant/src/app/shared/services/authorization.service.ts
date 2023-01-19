@@ -12,7 +12,7 @@ import { BuyingService } from 'src/app/services/buying.service';
   providedIn: 'root'
 })
 export class AuthorizationService {
-  userData: any;
+  userData: any = null;
   private dbPath = '/users';
   usersRef: AngularFireList<User>;
 
@@ -20,13 +20,14 @@ export class AuthorizationService {
   {
     this.usersRef = fbDbService.list(this.dbPath);
 
-    this.userData = this.fbAuthService.authState.subscribe((user) => {
+    this.fbAuthService.authState.subscribe((user) => {
+
       if (user) {
         // this.userData = user.toJSON();
         console.log(this.userData);
         // localStorage.setItem('user', JSON.stringify(this.userData));
         // JSON.parse(localStorage.getItem('user')!);
-        if(this.userData != null)
+        if(this.userData == null)
         {
           this.usersRef.snapshotChanges().pipe(
               map(changes =>
@@ -36,6 +37,7 @@ export class AuthorizationService {
               )
             ).subscribe(data => 
               {
+
                 data.forEach((userDetails) => 
                 {
                   if(userDetails.uid == user.uid)
@@ -57,6 +59,12 @@ export class AuthorizationService {
     
   }
 
+  public checkIsAuthorizedForRemovingFromDb(): boolean
+  {
+    const authorized_for_removing: string[] = [Role.Admin, Role.Manager];
+    return this.checkAuthorization(authorized_for_removing);
+  }
+
    // determines if user has matching role
    public checkAuthorization(allowedRoles: string[]): boolean {
     if (!this.userData) return false
@@ -66,16 +74,6 @@ export class AuthorizationService {
       }
     }
     return false
-  }
-
-  public checkIfUserIsAGuest(): boolean
-  {
-    if(this.userData == null)
-    {
-      return true;
-    }
-
-    return false;
   }
 
   // this has to be as promise 
@@ -116,4 +114,15 @@ export class AuthorizationService {
 
       return was_bought_earlier;
   }
+
+  public checkIfUserIsAGuest(): boolean
+  {
+    if(this.userData == null)
+    {
+      return true;
+    }
+
+    return false;
+  }
+
 }

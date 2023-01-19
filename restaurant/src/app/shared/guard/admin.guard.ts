@@ -18,8 +18,8 @@ export class AdminGuardGuard implements CanActivate {
     //   this.router.navigate(['/login']);
     //   return false;
     // }
+    
     const allowedRoles = ["Admin", "Manager"];
-    console.log("Hello");
     if(!this.authorizationService.checkAuthorization(allowedRoles))
     {
       return false;
