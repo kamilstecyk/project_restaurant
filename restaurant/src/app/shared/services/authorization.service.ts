@@ -6,6 +6,7 @@ import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { AngularFireList } from '@angular/fire/compat/database';
 import { Role } from './user';
 import { map } from 'rxjs'; 
+import { BuyingService } from 'src/app/services/buying.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AuthorizationService {
   private dbPath = '/users';
   usersRef: AngularFireList<User>;
 
-  constructor(private fbAuthService: AngularFireAuth, private fbDbService: AngularFireDatabase, private router: Router) 
+  constructor(private fbAuthService: AngularFireAuth, private fbDbService: AngularFireDatabase, private router: Router, private buyingService: BuyingService) 
   {
     this.usersRef = fbDbService.list(this.dbPath);
 
@@ -60,11 +61,59 @@ export class AuthorizationService {
    public checkAuthorization(allowedRoles: string[]): boolean {
     if (!this.userData) return false
     for (const role of allowedRoles) {
-      console.log(role + " vs " + this.userData.role)
       if ( this.userData.role == role ) {
         return true
       }
     }
     return false
+  }
+
+  public checkIfUserIsAGuest(): boolean
+  {
+    if(this.userData == null)
+    {
+      return true;
+    }
+
+    return false;
+  }
+
+  // this has to be as promise 
+  public chechIfUserHasBoughtDish(dish_key: string | null | undefined): Promise<boolean>
+  {
+    const was_bought_earlier = new Promise<boolean>((resolve, reject) => 
+    {
+      if(!dish_key || this.userData.uid == null)
+      {
+          reject(false);
+      }
+
+      if(this.userData.role == Role.Admin || this.userData.role == Role.Manager)
+      {
+        resolve(true);
+      }
+
+        this.buyingService.getOrdersHistory().snapshotChanges().pipe(
+          map(changes =>
+            changes.map(c =>
+              ({ key: c.payload.key, ...c.payload.val() })
+            )
+          )
+        ).subscribe(data => 
+          {
+            for(let bought_dish_record of data)
+            {
+
+              if(bought_dish_record.dish_info?.dish.key === dish_key && bought_dish_record.uid === this.userData.uid)
+              {
+                resolve(true);
+              }
+            }
+
+            resolve(false);
+          });
+      });
+
+      return was_bought_earlier;
   }
 }

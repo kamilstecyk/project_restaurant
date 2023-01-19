@@ -21,7 +21,8 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'forgot-password', component: ForgotPasswordComponent},
-  {path: '', pathMatch: 'full' , component: BusinessCardComponent}
+  {path: '', pathMatch: 'full' , component: BusinessCardComponent},
+  {path: '**', component: BusinessCardComponent}
 ];
 
 @NgModule({

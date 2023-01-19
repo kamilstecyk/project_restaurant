@@ -9,6 +9,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import { RatingService, Review, DishReviewRecord, DishRatingRecord } from 'src/app/services/rating.service';
 import { map } from 'rxjs';
+import { AuthorizationService } from 'src/app/shared/services/authorization.service';
 @Component({
   selector: 'app-dish-details',
   templateUrl: './dish-details.component.html',
@@ -35,7 +36,7 @@ export class DishDetailsComponent {
   current_dishes_data_subscirption: any;
   downloading_dish = true;
 
-  constructor(private menu_data_service:MenuDataService, private activated_route:ActivatedRoute, public price_transforming_service: PriceTransformingService, private shooping_cart_service: ShoppingCartService, private router: Router, private rating_service: RatingService)
+  constructor(private menu_data_service:MenuDataService, private activated_route:ActivatedRoute, public price_transforming_service: PriceTransformingService, private shooping_cart_service: ShoppingCartService, private router: Router, private rating_service: RatingService, private authorizationService: AuthorizationService)
   {
     this.given_id_of_object = Number(this.activated_route.snapshot.paramMap.get('id'));
 
@@ -59,24 +60,36 @@ export class DishDetailsComponent {
     this.current_dishes_data_subscirption.unsubscribe();
   }
 
-  onSubmit()
+  async onSubmit()
   {
     if (this.myform.valid) 
     {
-      console.log("Review form submitted!");
-
-      const username = this.myform.controls.nick.value;
-      const date = this.myform.controls.date.value;
-      const content = this.myform.controls.review_content.value;
-
-      console.log(username +  " " + date + " " + content);
-
-      if(this.given_id_of_object != null)
+      const was_bought_earlier = await this.authorizationService.chechIfUserHasBoughtDish(this.dish_object?.key);
+      console.log("Was bought: " + was_bought_earlier);
+      
+      if(was_bought_earlier)
       {
-        this.rating_service.addDishReview(this.given_id_of_object, username, date, content);
-        alert("Dodano pomyslnie recenzje o daniu!");
-        this.myform.reset();
-        this.sumbit_btn_was_clicked = false;
+        console.log("Review form submitted!");
+
+        const username = this.myform.controls.nick.value;
+        const date = this.myform.controls.date.value;
+        const content = this.myform.controls.review_content.value;
+
+        console.log(username +  " " + date + " " + content);
+
+        if(this.given_id_of_object != null)
+        {
+          this.rating_service.addDishReview(this.given_id_of_object, username, date, content);
+          alert("Dodano pomyslnie recenzje o daniu!");
+          this.myform.reset();
+          this.sumbit_btn_was_clicked = false;
+        }
+      }
+      else 
+      {
+        console.log("Review form has not been submitted!");
+        this.sumbit_btn_was_clicked = true;
+        alert("Nie mozesz wystawic komentarza dla dania którego nie zakupiłeś!");
       }
     }
     else 
