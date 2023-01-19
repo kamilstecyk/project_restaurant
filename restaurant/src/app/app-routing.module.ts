@@ -10,11 +10,12 @@ import { RegisterComponent } from './components/register/register.component';
 import { ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
 import { ShoppingHistoryComponent } from './components/shopping-history/shopping-history.component';
 import { AuthGuard } from './shared/guard/auth.guard';
+import { AdminGuardGuard } from './shared/guard/admin.guard';
 
 const routes: Routes = [
-  {path: 'potrawy', component: DishesComponent, canActivate:[AuthGuard]},
+  {path: 'potrawy', component: DishesComponent },
   {path: 'koszyk', component: ShoppingCartComponent, canActivate:[AuthGuard]},
-  {path: 'dodaj-danie', component: AddDishComponent, canActivate:[AuthGuard]},
+  {path: 'dodaj-danie', component: AddDishComponent, canActivate:[AdminGuardGuard]},
   {path: 'szczegoly-dania/:id', component: DishDetailsComponent, canActivate:[AuthGuard]} ,
   {path: 'historia', component: ShoppingHistoryComponent, canActivate:[AuthGuard]},
   {path: 'login', component: LoginComponent},

@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { AngularFireList } from '@angular/fire/compat/database';
 import { Router } from '@angular/router';
-import { User } from './user';
+import { Role, User } from './user';
 import { map } from 'rxjs'; 
+import { AuthorizationService } from './authorization.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class AuthService{
   usersRef: AngularFireList<User>;
   session: any;
 
-  constructor(private fbAuthService: AngularFireAuth, private fbDbService: AngularFireDatabase, public router: Router) 
+  constructor(private fbAuthService: AngularFireAuth, private fbDbService: AngularFireDatabase, public router: Router, private authorizationService: AuthorizationService) 
   {
     this.usersRef = fbDbService.list(this.dbPath);
 
@@ -41,10 +42,10 @@ export class AuthService{
     {
       return this.fbAuthService.signInWithEmailAndPassword(email, password)
       .then((result) => {
-        this.SetUserData(result.user);
         this.fbAuthService.authState.subscribe((user) => {
           if (user && user.emailVerified === true) {
             window.alert("Zalogowano poprawnie!");
+            this.updateEmailVerifiedState();
             this.router.navigate(['/']);
           }
           else if(user && user.emailVerified === false) 
@@ -139,7 +140,8 @@ export class AuthService{
         email: user.email,
         displayName: user.displayName,
         photoURL: user.photoURL,
-        emailVerified: user.emailVerified
+        emailVerified: user.emailVerified,
+        role: Role.Client
       }
 
       this.usersRef.push(userData).then(()=> {return true;}).catch(() => {return false;});
@@ -153,7 +155,33 @@ export class AuthService{
       this.router.navigate(['/login']);
       alert("Poprawnie wylogowano!");
       console.log("LoggedIn: " + this.isLoggedIn);
+      document.location.reload();
     });
+  }
+
+  private updateEmailVerifiedState()
+  {
+    if(this.userData)
+    {
+      this.usersRef.snapshotChanges().pipe(
+        map(changes =>
+          changes.map(c =>
+            ({ key: c.payload.key, ...c.payload.val() })
+          )
+        )
+      ).subscribe(data => 
+        {
+          data.forEach((userDetails) => 
+          {
+            if(userDetails.uid == this.userData.uid && userDetails.emailVerified == false)
+            {
+              if(userDetails.key)
+                this.usersRef.update(userDetails.key, {emailVerified: true});
+            }
+          });
+        }
+      );
+    }
   }
 
   private getLoggedUserDetails()
