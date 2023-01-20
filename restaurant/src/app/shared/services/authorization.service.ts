@@ -61,10 +61,7 @@ export class AuthorizationService {
 
   public checkIsAuthorizedForManipulatingDb(): boolean
   {
-    console.log("Check admin authorized: ");
     const authorized_for_removing: string[] = [Role.Admin, Role.Manager];
-    console.log(this.checkAuthorization(authorized_for_removing));
-
     return this.checkAuthorization(authorized_for_removing);
   }
 

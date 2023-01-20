@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { map } from 'rxjs';
+import { AuthorizationService } from '../shared/services/authorization.service';
 export interface DishRatingRecord
 {
   key?: string | null;
   dishId: number,
   averageStarRate: number,
   numberOfReviews: number,
+  usersWhoRated?: string[]
 }
 
 export interface Review 
@@ -37,7 +39,7 @@ export class RatingService {
   private dbPathReviews = '/userReviews';
   userReviewsRef: AngularFireList<DishReviewRecord>;
   
-  constructor(private db_service: AngularFireDatabase) 
+  constructor(private db_service: AngularFireDatabase, private authorizationService: AuthorizationService) 
   {
     this.starRatingsRef = db_service.list(this.dbPathRating);
     this.userReviewsRef = db_service.list(this.dbPathReviews);
@@ -103,6 +105,8 @@ export class RatingService {
   addDishRatingStar(number_of_stars: number, id: number)
   {
     let was_founded = false;
+    const logged_user_email = this.authorizationService.getLoggedUserEmail();
+
     for(var record of this.dishes_ratings)
     {
       if(record.dishId == id)
@@ -117,11 +121,14 @@ export class RatingService {
 
         ++record.numberOfReviews;
         record.averageStarRate = average_star_rating_rounded;
+
+        let record_users = record.usersWhoRated;
+        record_users?.push(logged_user_email);
         
         was_founded = true;
         if(record.key)
         {
-          this.updateStarRating(record.key, {numberOfReviews: record.numberOfReviews, averageStarRate: record.averageStarRate})
+          this.updateStarRating(record.key, {numberOfReviews: record.numberOfReviews, averageStarRate: record.averageStarRate,usersWhoRated : record_users })
         }
 
         break;
@@ -130,9 +137,9 @@ export class RatingService {
 
     if(was_founded == false)
     {
-      this.dishes_ratings.push({dishId: id, averageStarRate: number_of_stars, numberOfReviews: 1});
+      this.dishes_ratings.push({dishId: id, averageStarRate: number_of_stars, numberOfReviews: 1, usersWhoRated: [logged_user_email]});
 
-      this.createStarRating({dishId: id, averageStarRate: number_of_stars, numberOfReviews: 1});
+      this.createStarRating({dishId: id, averageStarRate: number_of_stars, numberOfReviews: 1, usersWhoRated: [logged_user_email]});
     }
   }
 

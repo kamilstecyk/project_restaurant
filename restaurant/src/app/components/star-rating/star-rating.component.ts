@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 import { RatingService, DishRatingRecord } from 'src/app/services/rating.service';
 import { map } from 'rxjs';
+import { AuthorizationService } from 'src/app/shared/services/authorization.service';
 
 @Component({
   selector: 'app-star-rating',
@@ -19,7 +20,7 @@ export class StarRatingComponent {
   current_rating_subscription: any;
   was_rated = false;
 
-  constructor(private rating_service: RatingService){}
+  constructor(private rating_service: RatingService, private authorizationService: AuthorizationService){}
 
   ngAfterViewInit()
   {
@@ -42,8 +43,9 @@ export class StarRatingComponent {
           {
             if(record.dishId == this.product_id)
             {
-              this.current_dish_rating = {key: record.key, dishId: record.dishId, averageStarRate: record.averageStarRate, numberOfReviews: record.numberOfReviews};
-
+              this.current_dish_rating = {key: record.key, dishId: record.dishId, averageStarRate: record.averageStarRate, numberOfReviews: record.numberOfReviews, usersWhoRated: record.usersWhoRated};
+              console.log("Current dish rating:");
+              console.log(this.current_dish_rating);
               this.addClass(Math.ceil(this.current_dish_rating.averageStarRate));
               this.number_of_reviews = this.current_dish_rating.numberOfReviews;
             }
@@ -54,10 +56,19 @@ export class StarRatingComponent {
   }
 
   countStarAndRate(star:any) {
-    this.selectedValue = star;
-    this.rating_service.addDishRatingStar(this.selectedValue, this.product_id);
-    this.was_rated = true;
-    setTimeout(()=>{this.was_rated = false}, 1250);
+    const logged_user_email = this.authorizationService.getLoggedUserEmail();
+  
+    if(!this.current_dish_rating?.usersWhoRated || !this.current_dish_rating?.usersWhoRated?.includes(logged_user_email))
+    {
+      this.selectedValue = star;
+      this.rating_service.addDishRatingStar(this.selectedValue, this.product_id);
+      this.was_rated = true;
+      setTimeout(()=>{this.was_rated = false}, 1250);
+    }
+    else 
+    {
+      alert("Nie mozna ocenic dania wiecej niz jeden raz!");
+    }
   }
 
   addClass(star:any) {
