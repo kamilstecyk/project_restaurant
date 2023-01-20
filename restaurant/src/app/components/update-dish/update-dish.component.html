@@ -1,0 +1,85 @@
+<div class="loader-container" *ngIf="this.uploading == true">
+    <button class="btn btn-primary" type="button" disabled>
+      <span
+        class="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true"
+      ></span>
+      <span style="font-size: 1.6rem; font-weight: bold; letter-spacing: 2px;">Ładowanie...</span>
+    </button>
+  </div>
+  <div class="form_container" *ngIf="this.uploading == false">
+      <div class="form_and_ingredients_container">
+          <form novalidate [formGroup]="myform" (ngSubmit)="onSubmit()">
+            
+            <h2>Zaktualizuj danie w menu</h2>
+  
+            <div class="form-group" >
+              <label>Nazwa dania</label>
+              <input type="text" class="form-control" formControlName="dish_name" required >
+            </div>
+        
+            <div class="form-group" >
+              <label>Typ kuchni</label>
+              <select class="form-control" formControlName="cuisine_type" required >
+                <option value="">Wybierz typ</option>
+                <option *ngFor="let type of types_of_cuisine" [value]="type">{{type}}</option>
+              </select>
+              <div class="form-control-feedback alert-danger alert" *ngIf="myform.controls.cuisine_type.invalid && myform.controls.cuisine_type.dirty" > 
+                    Wybierz wartość dla tego pola
+              </div>
+            </div>
+        
+        
+          <div class="form-group">
+              <label>Kategoria posiłku</label>
+              <select class="form-control" formControlName="dish_category" required >
+                <option value="">Wybierz kategorię</option>
+                <option *ngFor="let category of categories_of_dishes" [value]="category">{{category}}</option>
+              </select>
+              <div class="form-control-feedback alert-danger alert" *ngIf="myform.controls.dish_category.invalid && myform.controls.dish_category.dirty" > 
+                Wybierz wartość dla tego pola
+              </div>
+            </div>
+  
+            <div class="input-group mb-3" style="margin-top: 1.5rem;">
+              <input type="text" class="form-control" formControlName="list_of_ingredients" placeholder="Wpisz składnik" aria-label="Wpisz składnik" aria-describedby="basic-addon2" style="margin-bottom: 0px;font-size: 1.5rem;" >
+              <div class="input-group-append">
+                <button class="btn btn-outline-dark" type="button" style="font-size: 1.5rem;" (click)="addIngredientToDish()">Dodaj do listy</button>
+              </div>
+            </div>
+      
+          <div class="form-group">
+              <label>Ilość dostępnych dań</label>
+              <input type="number" min="0" value="1" class="form-control" step="1" formControlName="number_of_available_dishes" required aria-label="Recipient's username" aria-describedby="basic-addon2">
+              <div class="form-control-feedback alert-danger alert" *ngIf="myform.controls.number_of_available_dishes.invalid && myform.controls.number_of_available_dishes.dirty" > 
+                Nieprawidłowa wartość dla tego pola
+              </div>
+          </div>
+      
+          <div class="form-group" >
+              <label>Cena posiłku (PLN)</label>
+              <input type="text" class="form-control" formControlName="dish_price" required >
+              <div class="form-control-feedback alert-danger alert" *ngIf="myform.controls.dish_price.invalid && myform.controls.dish_price.dirty" > 
+                Nieprawidłowa wartość dla tego pola
+              </div>
+          </div>
+      
+          <div class="form-group">
+              <label>Krótki opis</label>
+              <input type="text" class="form-control" formControlName="short_desc" >
+          </div>
+
+          <button type="submit" class="btn btn-dark btn-lg" style="margin-left: auto; margin-right: auto;margin-top: 2rem; padding: 1.5rem">Zaaktualizuj danie</button>
+        </form>
+        <div class="ingredients_list_container flex_center_col">
+          <h3>Lista składników dania</h3>
+          <ul class="flex_center_col">
+            <li *ngFor="let ingredient of dish_ingredients">{{ingredient}}<img class="delete_ingredient" src="../../../assets/bx-folder-minus (4).svg" alt="delete" (click)="removeIngredientFromDish(ingredient)"/></li>
+            <li *ngIf="dish_ingredients.length == 0">Brak składników</li>
+          </ul>
+        </div>
+      </div>
+      
+  </div>
+  

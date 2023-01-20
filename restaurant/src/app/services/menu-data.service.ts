@@ -301,4 +301,26 @@ export class MenuDataService {
 
     this.getAndSendDataToSubjects();
   }
+
+  updateDish(dish_key: string, updatedDish: Dish)
+  {
+    const updatedValues = {
+      available_count : updatedDish.available_count, 
+      category : updatedDish.category,
+      cuisine_type : updatedDish.cuisine_type,
+      description : updatedDish.description,
+      id : updatedDish.id,
+      imgs_paths : updatedDish.imgs_paths,
+      ingredients : updatedDish.ingredients,
+      name : updatedDish.name,
+      price : updatedDish.price
+    }
+    this.db_service.updateDish(dish_key, updatedValues).then(()=>
+    {
+      alert("Zaaktualizowano danie!");
+    }).catch((err)=>
+    {
+      alert("Niestety nie mozna bylo zaaktualizowac dania!");
+    });
+  }
 }

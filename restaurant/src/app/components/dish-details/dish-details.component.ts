@@ -36,7 +36,10 @@ export class DishDetailsComponent {
   current_dishes_data_subscirption: any;
   downloading_dish = true;
 
-  constructor(private menu_data_service:MenuDataService, private activated_route:ActivatedRoute, public price_transforming_service: PriceTransformingService, private shooping_cart_service: ShoppingCartService, private router: Router, private rating_service: RatingService, private authorizationService: AuthorizationService)
+  user_has_commented_yet = false;
+  user_has_rated_yet = false;
+
+  constructor(private menu_data_service:MenuDataService, private activated_route:ActivatedRoute, public price_transforming_service: PriceTransformingService, private shooping_cart_service: ShoppingCartService, private router: Router, private rating_service: RatingService, public authorizationService: AuthorizationService)
   {
     this.given_id_of_object = Number(this.activated_route.snapshot.paramMap.get('id'));
 
@@ -49,7 +52,7 @@ export class DishDetailsComponent {
     // form 
     this.myform = new FormGroup({
       
-      nick: new FormControl('', [this.nickValidator(), Validators.required]), 
+      // nick: new FormControl('', [this.nickValidator(), Validators.required]), 
       date: new FormControl('', [this.dateValidator()]),
       review_content: new FormControl('', [this.reviewContentValidator(), Validators.required]),
     });
@@ -67,11 +70,12 @@ export class DishDetailsComponent {
       const was_bought_earlier = await this.authorizationService.chechIfUserHasBoughtDish(this.dish_object?.key);
       console.log("Was bought: " + was_bought_earlier);
       
-      if(was_bought_earlier)
+      if(was_bought_earlier && !this.user_has_commented_yet)
       {
         console.log("Review form submitted!");
 
-        const username = this.myform.controls.nick.value;
+        // const username = this.myform.controls.nick.value;
+        const username = this.authorizationService.getLoggedUserEmail();
         const date = this.myform.controls.date.value;
         const content = this.myform.controls.review_content.value;
 
@@ -89,7 +93,7 @@ export class DishDetailsComponent {
       {
         console.log("Review form has not been submitted!");
         this.sumbit_btn_was_clicked = true;
-        alert("Nie mozesz wystawic komentarza dla dania którego nie zakupiłeś!");
+        alert("Nie mozesz wystawic komentarza dla dania którego nie zakupiłeś oraz nie mozesz wystawiac więcej niz jednego komentarza!");
       }
     }
     else 
@@ -104,11 +108,11 @@ export class DishDetailsComponent {
   
       const value = control.value;
 
-      var usernameRegex = /^[a-zA-Z0-9]+$/;
+      // var usernameRegex = /^[a-zA-Z0-9]+$/;
   
-      if ( !usernameRegex.test(value) ) {
-          return {badUsername:true};
-      }
+      // if ( !usernameRegex.test(value) ) {
+      //     return {badUsername:true};
+      // }
   
       return null;
     };
@@ -260,6 +264,7 @@ export class DishDetailsComponent {
         if(dish.id === this.given_id_of_object )
         {
           this.dish_object = dish;
+          break;
         }
       }
 
@@ -298,6 +303,7 @@ export class DishDetailsComponent {
     ).subscribe(data => 
       {
         this.dish_reviews = []
+        const logged_user = this.authorizationService.getLoggedUser();
 
         data.forEach(record => {
           if(record.dishId != null && record.key != null && record.reviews != null)
@@ -309,6 +315,11 @@ export class DishDetailsComponent {
                 this.dish_reviews.push({nick : review.nick,
                   date : review.date,
                   content : review.content});
+
+                if(logged_user && review.nick == logged_user.email)
+                {
+                    this.user_has_commented_yet = true;
+                }
               });
             }
           }

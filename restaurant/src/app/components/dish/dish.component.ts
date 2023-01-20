@@ -5,6 +5,7 @@ import { MenuDataService } from 'src/app/services/menu-data.service';
 import { ShoppingCartService } from 'src/app/services/shopping-cart.service';
 import { AuthorizationService } from 'src/app/shared/services/authorization.service';
 import { Role } from 'src/app/shared/services/user';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-dish',
   templateUrl: './dish.component.html',
@@ -20,7 +21,7 @@ export class DishComponent {
   @Input() most_expensive_dish_price:number;
   @Input() cheapest_dish_price: number;
  
-  constructor(public price_transforming_service: PriceTransformingService, private menu_data_service: MenuDataService, private shooping_cart_service: ShoppingCartService, public authorizationService: AuthorizationService){}
+  constructor(public price_transforming_service: PriceTransformingService, private menu_data_service: MenuDataService, private shooping_cart_service: ShoppingCartService, public authorizationService: AuthorizationService, private router: Router){}
 
   ngOnInit()
   {
@@ -98,5 +99,10 @@ export class DishComponent {
   {
     this.menu_data_service.removeDishFromMenu(this.dish_object);
     this.shooping_cart_service.removeFromCartIfThisDishHasBeenRemovedFromMenu(this.dish_object);
+  }
+
+  updateDishInMenu()
+  {
+    this.router.navigate(['/zaaktualizuj-danie', this.dish_object.key]);
   }
 }

@@ -8,7 +8,7 @@
       <span style="font-size: 1.6rem; font-weight: bold; letter-spacing: 2px;">Ładowanie...</span>
     </button>
 </div>
-<div class="flex_center_col" style="min-height: 90vh;" *ngIf="this.dishes_data.length > 0">
+<div class="flex_center_col wrapper" style="min-height: 90vh;" *ngIf="this.dishes_data.length > 0">
     <app-filtering></app-filtering>
     <div class="dishes_container">
         <app-dish *ngFor="let dish of dishes_data | dishesFilter:this.cuisine_types_checked:'cuisine_type' | dishesFilter:this.dishes_categories_checked:'category' | minMaxFiltering:this.min_value_chosen:this.max_value_chosen | starRatingFilter:this.stars_rating_checked | paginate: { itemsPerPage: tableSize,

@@ -32,8 +32,8 @@ export class StarRatingFilterPipe implements PipeTransform {
 
   transform(value: any, filter_data: number[]) {
 
-    console.log("Filters: " + filter_data );
-    console.log(value);
+    console.log("Filters star rating: " + filter_data );
+    // console.log(value);
 
     if(value.length == 0 || filter_data.length == 0)
     {
@@ -54,8 +54,9 @@ export class StarRatingFilterPipe implements PipeTransform {
         }
       }
 
-      if(dish_star_rating_record != null && filter_data.includes(dish_star_rating_record.averageStarRate))
+      if(dish_star_rating_record != null && filter_data.includes(Math.ceil(dish_star_rating_record.averageStarRate)))
       {
+        console.log("Rating of dish in filter: " + dish_star_rating_record.averageStarRate);
         filtered_dishes.push(dish);
       }
     }

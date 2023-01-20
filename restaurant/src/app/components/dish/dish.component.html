@@ -5,9 +5,9 @@
         </a>
     </div>
     <div class="flex_center_row">
-        <img *ngIf="!this.authorizationService.checkIfUserIsAGuest()" src="../../../assets/bxs-minus-circle.svg" alt="Decrease number of order icon" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'"  class="decrease_order_size" (click)="handleRemoveDishFromOrder()"/>
+        <img *ngIf="!this.authorizationService.checkIfUserIsAGuest() && !this.authorizationService.checkIsAuthorizedForManipulatingDb()" src="../../../assets/bxs-minus-circle.svg" alt="Decrease number of order icon" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'"  class="decrease_order_size" (click)="handleRemoveDishFromOrder()"/>
 
-        <img *ngIf="!this.authorizationService.checkIfUserIsAGuest()" src="../../../assets/bxs-plus-circle.svg" alt="Increase number or order icon" class="increase_order_size" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'" (click)="handleAddDishToOrder()"/>
+        <img *ngIf="!this.authorizationService.checkIfUserIsAGuest() && !this.authorizationService.checkIsAuthorizedForManipulatingDb()" src="../../../assets/bxs-plus-circle.svg" alt="Increase number or order icon" class="increase_order_size" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'" (click)="handleAddDishToOrder()"/>
     </div>
     <div class="dish_desc flex_center_col">
         <div class="flex_center_row">
@@ -31,7 +31,10 @@
             <h3>{{ this.price_transforming_service.getPriceInUSD(dish_object.price) | currency:'USD '}}</h3>
         </div>
         <div class="flex_center_row" >
-            <button *ngIf="this.authorizationService.checkIsAuthorizedForRemovingFromDb()" class="button_styled" (click)="removeFromMenu()">Usuń danie z menu</button>
+            <button *ngIf="this.authorizationService.checkIsAuthorizedForManipulatingDb()" class="button_styled" (click)="removeFromMenu()">Usuń danie z menu</button>
+        </div>
+        <div class="flex_center_row" >
+            <button *ngIf="this.authorizationService.checkIsAuthorizedForManipulatingDb()" class="button_styled" (click)="this.updateDishInMenu()">Aktualizuj danie</button>
         </div>
     </div>
 </div>

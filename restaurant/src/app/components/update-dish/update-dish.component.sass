@@ -1,0 +1,79 @@
+.form_container
+    width: 100vw
+    min-height: 100vh
+    display: flex
+    justify-content: center
+    align-content: center
+    flex-direction: column
+    margin-top: 4%
+    
+form 
+    width: 60%
+    margin-top: 2rem
+    margin-bottom: 2rem
+    margin-left: auto
+    margin-right: auto
+    display: flex
+    justify-content: center
+    align-content: center
+    flex-direction: column
+
+    &>h2 
+        color: black
+        font-weight: bold
+        align-self: center 
+        margin-bottom: 2rem
+
+form input, select
+    margin-bottom: 0.5rem
+
+.form_and_ingredients_container
+    display: flex
+    justify-content: space-between
+    align-items: flex-start
+
+.ingredients_list_container    
+    width: 30%
+    margin-top: 4rem
+
+    & ul 
+        border: 1px solid rgba(0,0,0,0.3)
+        width: 80%
+        margin-top: 1rem
+        min-height: 300px
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.3)
+
+    & ul li 
+        font-size: 1.5rem
+        text-align: center
+
+label, input, select
+    font-size: 1.5rem
+
+.add_ingredient_wrapper
+    display: flex
+    align-items: center
+
+    & button 
+
+.delete_ingredient
+    margin-left: 2rem
+    transition: 0.3s all ease-in-out
+
+    &:hover 
+        filter: invert(100%)
+        cursor: pointer
+        
+@media screen and (max-width: 700px)
+    .form_and_ingredients_container
+        flex-direction: column
+         justify-content: center
+         align-items: center
+
+    .ingredients_list_container
+        width: 100%
+        margin-top: 1rem
+
+        & ul 
+            width: 65%
+            min-height: 75px

@@ -44,9 +44,9 @@
   <div class="flex_space_evenly_row wrapper">  
       <div class="dish_wrapper flex_center_col" [style.border]=" dish_object.price > 26 ? '3px solid lightgreen' : '3px solid red' " *ngIf="dish_object != null">
           <div class="flex_center_row">
-              <img src="../../../assets/bxs-minus-circle.svg" alt="Decrease number of order icon" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'"  class="decrease_order_size" (click)="handleRemoveDishFromOrder()"/>
+              <img *ngIf="!this.authorizationService.checkIfUserIsAGuest() && !this.authorizationService.checkIsAuthorizedForManipulatingDb()" src="../../../assets/bxs-minus-circle.svg" alt="Decrease number of order icon" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'"  class="decrease_order_size" (click)="handleRemoveDishFromOrder()"/>
 
-              <img src="../../../assets/bxs-plus-circle.svg" alt="Increase number or order icon" class="increase_order_size" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'" (click)="handleAddDishToOrder()"/>
+              <img *ngIf="!this.authorizationService.checkIfUserIsAGuest() && !this.authorizationService.checkIsAuthorizedForManipulatingDb()" src="../../../assets/bxs-plus-circle.svg" alt="Increase number or order icon" class="increase_order_size" [style.visibility]="dish_object.available_count > 0 ? 'visible' : 'hidden'" (click)="handleAddDishToOrder()"/>
           </div>
           <div class="dish_desc flex_center_col">
               <div class="flex_center_row">
@@ -83,7 +83,7 @@
                   <h3 style="font-weight: normal;font-size: 1.3rem;">{{(dish_object.description != null) ? dish_object.description : "Brak informacji"}}</h3>
               </div>
 
-              <app-star-rating [product_id]="dish_object.id">
+              <app-star-rating *ngIf="!this.authorizationService.checkIfUserIsAGuest() && !this.authorizationService.checkIsAuthorizedForManipulatingDb()" [product_id]="dish_object.id">
               </app-star-rating>
 
               <div class="flex_center_row" >
@@ -92,35 +92,37 @@
           </div>
       </div>
       <div class="container text-center form_part m-4">
-          <h2>Wystaw recenzje dla tego dania</h2>
-          <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="(myform.controls['nick'].errors?.required || myform.controls['date'].errors?.required || myform.controls['review_content'].errors?.required) && this.sumbit_btn_was_clicked ">
-            Pola nie mogą być puste, uzupełnij je!
+          <div *ngIf="!this.authorizationService.checkIfUserIsAGuest() && !this.authorizationService.checkIsAuthorizedForManipulatingDb()">
+            <h2>Wystaw recenzje dla tego dania</h2>
+            <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="( myform.controls['date'].errors?.required || myform.controls['review_content'].errors?.required) && this.sumbit_btn_was_clicked ">
+              Pola nie mogą być puste, uzupełnij je!
+            </div>
+            <form class="mt-4 text-start form_styled"  novalidate [formGroup]="myform" (ngSubmit)="onSubmit()" >
+                <!-- <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.nick.invalid && myform.controls.nick.dirty" > 
+                    Niepoprawny nick lub pusty!
+                </div>
+                <div class="form-group m-3">
+                  <label class="h3 mb-2" for="exampleFormControlInput1">Nick</label>
+                  <input type="text" class="form-control form-control-lg p-2" id="nick_input" placeholder="nazwa uzytkownika" formControlName="nick" [disabled]="true">
+                </div> -->
+                <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.date.invalid && myform.controls.date.dirty" > 
+                  Wybrana data jest niepoprawna, musi być nie pózniejsza niz dzis!
+                </div>
+                <div class="form-group m-3">
+                  <label class="h3 mb-2" for="exampleFormControlInput1">Data zakupu</label>
+                  <input type="date" class="form-control form-control-lg pe-2" id="date_input" formControlName="date">
+                </div>
+                <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.review_content.invalid && myform.controls.review_content.dirty" > 
+                  Pole musi zawierać więcej niz 50 znakow, ale mniej niz 500!
+                </div>
+                <div class="form-group m-3">
+                  <label class="h3 mb-2" for="exampleFormControlTextarea1">Wpisz treść swojej recenzji (minimum 50 znaków)</label>
+                  <textarea class="form-control form-control-lg p-2" id="review_textarea_input" rows="3" formControlName="review_content" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-danger btn-lg w-100 mt-4" style="font-size:1.4rem">Dodaj opinię</button>        
+            </form>
           </div>
-          <form class="mt-4 text-start form_styled"  novalidate [formGroup]="myform" (ngSubmit)="onSubmit()" >
-              <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.nick.invalid && myform.controls.nick.dirty" > 
-                  Niepoprawny nick lub pusty!
-              </div>
-              <div class="form-group m-3">
-                <label class="h3 mb-2" for="exampleFormControlInput1">Nick</label>
-                <input type="text" class="form-control form-control-lg p-2" id="nick_input" placeholder="nazwa uzytkownika" formControlName="nick" required>
-              </div>
-              <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.date.invalid && myform.controls.date.dirty" > 
-                Wybrana data jest niepoprawna, musi być nie pózniejsza niz dzis!
-              </div>
-              <div class="form-group m-3">
-                <label class="h3 mb-2" for="exampleFormControlInput1">Data zakupu</label>
-                <input type="date" class="form-control form-control-lg pe-2" id="date_input" formControlName="date">
-              </div>
-              <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="myform.controls.review_content.invalid && myform.controls.review_content.dirty" > 
-                Pole musi zawierać więcej niz 50 znakow, ale mniej niz 500!
-              </div>
-              <div class="form-group m-3">
-                <label class="h3 mb-2" for="exampleFormControlTextarea1">Wpisz treść swojej recenzji (minimum 50 znaków)</label>
-                <textarea class="form-control form-control-lg p-2" id="review_textarea_input" rows="3" formControlName="review_content" required></textarea>
-              </div>
-              <button type="submit" class="btn btn-danger btn-lg w-100 mt-4" style="font-size:1.4rem">Dodaj opinię</button>        
-          </form>
-
+          <h2 *ngIf="this.authorizationService.checkIfUserIsAGuest()">Komentarze</h2>
           <div class="row d-flex justify-content-center mt-5 comments_box" >
               <div class="col-md-12col-lg-10" *ngFor="let review of this.dish_reviews">
                 <div class="card shadow-0 border" style="background-color: #f0f2f5;">
@@ -141,89 +143,6 @@
                     </div>
                 </div>
               </div>
-            
-
-              <!-- <div class="col-md-12col-lg-10">
-                <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                  <div class="card-body p-4">
-                    <div class="card mb-4">
-                      <div class="card-body">
-                        <p class="h4">Type your note, and hit enter to add it</p>
-            
-                        <div class="d-flex justify-content-between">
-                          <div class="d-flex flex-row align-items-center">
-                            <p class="h4 mb-0 ms-2">Martha</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-              </div> -->
-              <!-- <div class="col-md-12col-lg-10">
-                  <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                    <div class="card-body p-4">
-                      <div class="card mb-4">
-                        <div class="card-body">
-                          <p>Type your note, and hit enter to add it</p>
-              
-                          <div class="d-flex justify-content-between">
-                            <div class="d-flex flex-row align-items-center">
-                              <p class="small mb-0 ms-2">Martha</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                </div>
-                <div class="col-md-12col-lg-10">
-                  <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                    <div class="card-body p-4">
-                      <div class="card mb-4">
-                        <div class="card-body">
-                          <p>Type your note, and hit enter to add it</p>
-              
-                          <div class="d-flex justify-content-between">
-                            <div class="d-flex flex-row align-items-center">
-                              <p class="small mb-0 ms-2">Martha</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                </div>
-              <div class="col-md-12col-lg-10">
-                  <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                    <div class="card-body p-4">
-                      <div class="card mb-4">
-                        <div class="card-body">
-                          <p>Type your note, and hit enter to add it</p>
-              
-                          <div class="d-flex justify-content-between">
-                            <div class="d-flex flex-row align-items-center">
-                              <p class="small mb-0 ms-2">Martha</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                </div>
-                <div class="col-md-12col-lg-10">
-                  <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                    <div class="card-body p-4">
-                      <div class="card mb-4">
-                        <div class="card-body">
-                          <p>Type your note, and hit enter to add it</p>
-              
-                          <div class="d-flex justify-content-between">
-                            <div class="d-flex flex-row align-items-center">
-                              <p class="small mb-0 ms-2">Martha</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                </div>
-            </div> -->
       </div>
   </div>
 </div>

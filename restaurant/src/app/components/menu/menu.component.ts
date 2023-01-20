@@ -3,6 +3,7 @@ import { ShoppingCartService } from 'src/app/services/shopping-cart.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { User } from 'src/app/shared/services/user';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AuthorizationService } from 'src/app/shared/services/authorization.service';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -15,7 +16,7 @@ export class MenuComponent {
 
   current_number_of_ordered_dishes = 0;
 
-  constructor(private shopping_cart_service: ShoppingCartService, public authService: AuthService, private fbAuthService: AngularFireAuth)
+  constructor(private shopping_cart_service: ShoppingCartService, public authService: AuthService, private fbAuthService: AngularFireAuth, public authorizationService: AuthorizationService)
   {
       this.currently_all_ordered_dishes_count_subscription = shopping_cart_service.getAllCurrenlyOrderedDishesCount().subscribe((value)=>
       {

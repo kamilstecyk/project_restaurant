@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Role, User } from './user';
 import { map } from 'rxjs'; 
 import { AuthorizationService } from './authorization.service';
+import { ShoppingCartService } from 'src/app/services/shopping-cart.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class AuthService{
   usersRef: AngularFireList<User>;
   session: any;
 
-  constructor(private fbAuthService: AngularFireAuth, private fbDbService: AngularFireDatabase, public router: Router, private authorizationService: AuthorizationService) 
+  constructor(private fbAuthService: AngularFireAuth, private fbDbService: AngularFireDatabase, public router: Router, private authorizationService: AuthorizationService, private shoppingCartService: ShoppingCartService) 
   {
     this.usersRef = fbDbService.list(this.dbPath);
 
@@ -46,6 +47,9 @@ export class AuthService{
           if (user && user.emailVerified === true) {
             window.alert("Zalogowano poprawnie!");
             this.updateEmailVerifiedState();
+
+            this.shoppingCartService.fetchLoggedUserShoppingCartState(user.uid);
+
             this.router.navigate(['/']);
           }
           else if(user && user.emailVerified === false) 

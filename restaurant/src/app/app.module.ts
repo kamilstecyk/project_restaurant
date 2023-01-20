@@ -33,6 +33,9 @@ import { RegisterComponent } from './components/register/register.component'
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AuthService } from "./shared/services/auth.service";
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { UpdateDishComponent } from './components/update-dish/update-dish.component';
+import { DishesManagerComponent } from './components/dishes-manager/dishes-manager.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -65,6 +68,9 @@ const firebaseConfig = {
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,
+    UpdateDishComponent,
+    DishesManagerComponent,
+    AdminPanelComponent,
   ],
   imports: [
     BrowserModule,

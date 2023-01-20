@@ -11,18 +11,26 @@ import { ShoppingCartComponent } from './components/shopping-cart/shopping-cart.
 import { ShoppingHistoryComponent } from './components/shopping-history/shopping-history.component';
 import { AuthGuard } from './shared/guard/auth.guard';
 import { AdminGuardGuard } from './shared/guard/admin.guard';
+import { UpdateDishComponent } from './components/update-dish/update-dish.component';
+import { AdminOrManagerGuard } from './shared/guard/admin-or-manager.guard';
+import { DishesManagerComponent } from './components/dishes-manager/dishes-manager.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import { LoggedGuard } from './shared/guard/logged.guard';
 
 const routes: Routes = [
   {path: 'potrawy', component: DishesComponent },
-  {path: 'koszyk', component: ShoppingCartComponent, canActivate:[AuthGuard]},
-  {path: 'dodaj-danie', component: AddDishComponent, canActivate:[AdminGuardGuard]},
-  {path: 'szczegoly-dania/:id', component: DishDetailsComponent, canActivate:[AuthGuard]} ,
-  {path: 'historia', component: ShoppingHistoryComponent, canActivate:[AuthGuard]},
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
-  {path: 'forgot-password', component: ForgotPasswordComponent},
-  {path: '', pathMatch: 'full' , component: BusinessCardComponent},
-  {path: '**', component: BusinessCardComponent}
+  {path: 'koszyk', component: ShoppingCartComponent, canActivate :[AuthGuard] },
+  {path: 'dodaj-danie', component: AddDishComponent, canActivate :[AdminOrManagerGuard] },
+  {path: 'szczegoly-dania/:id', component: DishDetailsComponent } ,
+  {path: 'historia', component: ShoppingHistoryComponent, canActivate :[AuthGuard] },
+  {path: 'zaaktualizuj-danie/:key', component: UpdateDishComponent, canActivate : [AdminOrManagerGuard] },
+  {path: 'login', component: LoginComponent, canActivate : [LoggedGuard] },
+  {path: 'register', component: RegisterComponent, canActivate : [LoggedGuard] },
+  {path: 'forgot-password', component: ForgotPasswordComponent, canActivate : [LoggedGuard] },
+  {path: 'zarzadaj-daniami' , component: DishesManagerComponent, canActivate : [AdminOrManagerGuard] },
+  {path: 'panel-admina', component: AdminPanelComponent, canActivate : [AdminGuardGuard] },
+  {path: '', pathMatch: 'full' , component: BusinessCardComponent },
+  {path: '**', component: BusinessCardComponent }
 ];
 
 @NgModule({
