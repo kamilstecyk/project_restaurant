@@ -6,10 +6,12 @@ export enum Role
 }
 
 export class User {
+    key?: string | null;
     uid?: string | null;
     email?: string;
     displayName?: string;
     photoURL?: string;
     emailVerified?: boolean;
-    role: Role
+    role: Role;
+    banned: boolean
 }

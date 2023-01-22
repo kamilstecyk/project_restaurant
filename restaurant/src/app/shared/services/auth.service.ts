@@ -8,20 +8,38 @@ import { Role, User } from './user';
 import { map } from 'rxjs'; 
 import { AuthorizationService } from './authorization.service';
 import { ShoppingCartService } from 'src/app/services/shopping-cart.service';
+import { AngularFireObject } from '@angular/fire/compat/database';
 
+export enum SessionType
+{
+  None = "none",
+  Local = 'local',
+  Session = 'session'
+}
+
+export class SessionState
+{
+  key?: string | null
+  state: string
+}
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService{
   userData: any;
 
-  private dbPath = '/users';
-  usersRef: AngularFireList<User>;
-  session: any;
+  private dbPathUsers = '/users';
+  private usersRef: AngularFireList<User>;
+  session: SessionState = {state: SessionType.Session} as SessionState; // defualt
+
+  private sessionState: AngularFireObject<SessionState>;
 
   constructor(private fbAuthService: AngularFireAuth, private fbDbService: AngularFireDatabase, public router: Router, private authorizationService: AuthorizationService, private shoppingCartService: ShoppingCartService) 
   {
-    this.usersRef = fbDbService.list(this.dbPath);
+    this.usersRef = fbDbService.list(this.dbPathUsers);
+    this.sessionState = fbDbService.object('sessionState');
+
+    this.fetchCurrentStateSession();
 
     this.fbAuthService.authState.subscribe((user) => {
       if (user) {
@@ -39,8 +57,9 @@ export class AuthService{
   // Sign in with email/password
   SignIn(email: string, password: string) {
     // none | session | local
-    this.fbAuthService.setPersistence('session').then(()=>
+    this.fbAuthService.setPersistence(this.session.state).then(()=>
     {
+      console.log("LOG IN SESSION MODE: " + this.session.state);
       return this.fbAuthService.signInWithEmailAndPassword(email, password)
       .then((result) => {
         this.fbAuthService.authState.subscribe((user) => {
@@ -145,7 +164,8 @@ export class AuthService{
         displayName: user.displayName,
         photoURL: user.photoURL,
         emailVerified: user.emailVerified,
-        role: Role.Client
+        role: Role.Client,
+        banned: false
       }
 
       this.usersRef.push(userData).then(()=> {return true;}).catch(() => {return false;});
@@ -214,4 +234,36 @@ export class AuthService{
     return new User();
   }
 
+  private fetchCurrentStateSession()
+  {
+    this.getSessionState().snapshotChanges().pipe(
+      map(c =>
+          ({ key: c.payload.key, ...c.payload.val() }) 
+      )
+    ).subscribe(state =>
+      {
+        this.session = state as SessionState;
+        console.log(state);
+      });
+  }
+
+  getAllUsers(): AngularFireList<User>
+  {
+    return this.usersRef;
+  }
+
+  updateUser(key: string, value: any): Promise<void>
+  {
+    return this.usersRef.update(key, value);
+  }
+
+  updateSessionState(session_state: string):Promise<void>
+  {
+    return this.sessionState.update({ state : session_state });
+  }
+
+  getSessionState(): AngularFireObject<SessionState>
+  {
+    return this.sessionState;
+  }
 }

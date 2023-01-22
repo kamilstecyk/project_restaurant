@@ -1,1 +1,72 @@
-<p>admin-panel works!</p>
+<div class="loader-container" *ngIf="this.downloaded_count < 2">
+  <button class="btn btn-primary" type="button" disabled>
+    <span
+      class="spinner-border spinner-border-sm"
+      role="status"
+      aria-hidden="true"
+    ></span>
+    <span style="font-size: 1.6rem; font-weight: bold; letter-spacing: 2px;">Ładowanie...</span>
+  </button>
+</div>
+<div class="wrapper" *ngIf="this.downloaded_count >= 2">
+    
+    <div class="session_settings d-flex justify-content-center mb-5">
+        <form class="w-50 d-flex justify-content-center flex-column" (submit)="onSubmit($event, sessionSelect.value)">
+            <label for="select_session" class="form-label">Wybierz rodzaj sesji logowania:</label>
+            <select class="form-select text-center" aria-label="Sessions select" id="select_session" #sessionSelect>
+                <option value="{{getSessionStatesTypes().None}}" [selected]="this.session.state == getSessionStatesTypes().None" >{{getSessionStatesTypes().None | uppercase}}</option>
+                <option value="{{getSessionStatesTypes().Local}}" [selected]="this.session.state == getSessionStatesTypes().Local">{{getSessionStatesTypes().Local | uppercase}}</option>
+                <option value="{{getSessionStatesTypes().Session}}" [selected]="this.session.state == getSessionStatesTypes().Session">{{getSessionStatesTypes().Session | uppercase}}</option>
+            </select>
+            <button class="btn btn-lg btn-danger mt-3 mb-5">Zapisz</button>
+        </form>
+    </div>
+
+    <section class="intro mt-5">
+        <div class="h-100 mt-5">
+          <div class="mask d-flex align-items-center h-100">
+            <div class="container">
+              <div class="row justify-content-center">
+                <div class="col-12">
+                  <div class="table-responsive bg-white users_wrapper">
+                    <table class="table mb-0">
+                      <thead>
+                        <tr>
+                          <th scope="col">UID</th>
+                          <th scope="col">EMAIL</th>
+                          <th scope="col">EMAIL ZWERYFIKOWANY</th>
+                          <th scope="col">ROLA</th>
+                          <th scope="col">ZABLOKOWANY</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let user of this.users">
+                          <th scope="row" style="color: #666666;">{{ user.uid }}</th>
+                          <td>{{ user.email }}</td>
+                          <td>{{ user.emailVerified == true ? 'TAK' : 'NIE' }}</td>
+                          <td>
+                            <select class="form-select" #roleSelect>
+                              <option value="{{getRoles().Client}}" [selected]="user.role == getRoles().Client">{{getRoles().Client}}</option>
+                              <option value="{{getRoles().Manager}}" [selected]="user.role == getRoles().Manager">{{getRoles().Manager}}</option>
+                              <option value="{{getRoles().Admin}}" [selected]="user.role == getRoles().Admin">{{getRoles().Admin}}</option>
+                            </select>
+                          </td>
+                          <td>
+                            <select class="form-select" #banSelect>
+                              <option value="NIE" [selected]="user.banned == false" >NIE</option>
+                              <option value="TAK" [selected]="user.banned == true">TAK</option>
+                            </select>
+                          </td>
+                          <td><button class="btn btn-sm btn-danger" (click)="this.updateUserRecord(user.key, roleSelect.value, banSelect.value)">Zapisz</button></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+</div>

@@ -18,7 +18,7 @@ export class AdminOrManagerGuard implements CanActivate {
       const allowedRoles = ["Admin", "Manager"];
       if(!this.authorizationService.checkAuthorization(allowedRoles))
       {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/']);
         return false;
       }
 
