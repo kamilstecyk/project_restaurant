@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ShoppingCartService } from 'src/app/services/shopping-cart.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { User } from 'src/app/shared/services/user';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthorizationService } from 'src/app/shared/services/authorization.service';
 @Component({
