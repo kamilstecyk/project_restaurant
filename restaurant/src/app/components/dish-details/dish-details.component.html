@@ -83,16 +83,13 @@
                   <h3 style="font-weight: normal;font-size: 1.3rem;">{{(dish_object.description != null) ? dish_object.description : "Brak informacji"}}</h3>
               </div>
 
-              <app-star-rating *ngIf="!this.authorizationService.checkIfUserIsAGuest() && !this.authorizationService.checkIsAuthorizedForManipulatingDb()" [product_id]="dish_object.id">
+              <app-star-rating class="mt-3" [product_id]="dish_object.id">
               </app-star-rating>
 
-              <div class="flex_center_row" >
-                  <button class="button_styled" (click)="removeFromMenu()">Usuń danie z menu</button>
-              </div>
           </div>
       </div>
       <div class="container text-center form_part m-4">
-          <div *ngIf="!this.authorizationService.checkIfUserIsAGuest() && !this.authorizationService.checkIsAuthorizedForManipulatingDb()">
+          <div *ngIf="!this.authorizationService.checkIfUserIsAGuest()">
             <h2>Wystaw recenzje dla tego dania</h2>
             <div class="form-control-feedback alert-danger alert h4 m-2 p-2" *ngIf="( myform.controls['date'].errors?.required || myform.controls['review_content'].errors?.required) && this.sumbit_btn_was_clicked ">
               Pola nie mogą być puste, uzupełnij je!
@@ -122,7 +119,7 @@
                 <button type="submit" class="btn btn-danger btn-lg w-100 mt-4" style="font-size:1.4rem">Dodaj opinię</button>        
             </form>
           </div>
-          <h2 *ngIf="this.authorizationService.checkIfUserIsAGuest()">Komentarze</h2>
+          <h2 *ngIf="this.authorizationService.checkIfUserIsAGuest() && this.dish_reviews.length > 0">Komentarze</h2>
           <div class="row d-flex justify-content-center mt-5 comments_box" >
               <div class="col-md-12col-lg-10" *ngFor="let review of this.dish_reviews">
                 <div class="card shadow-0 border" style="background-color: #f0f2f5;">

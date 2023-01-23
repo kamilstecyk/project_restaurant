@@ -20,7 +20,7 @@ export class StarRatingComponent {
   current_rating_subscription: any;
   was_rated = false;
 
-  constructor(private rating_service: RatingService, private authorizationService: AuthorizationService){}
+  constructor(private rating_service: RatingService, public authorizationService: AuthorizationService){}
 
   ngAfterViewInit()
   {

@@ -1,11 +1,13 @@
 <div class="row">
     <div class="col-sm-12 flex_center_row">
-        <ol class="list-inline rating-list" *ngFor="let star of stars; let i= index" style="display: inline-block"> 
-            <li (click)="countStarAndRate(star)" id="{{'starId'+i+product_id}}" [ngClass]="{'selected': (star <= selectedValue)}" 
-             (mouseover)="addClass(star)" (mouseout)="removeClass(star)"> ★
-            </li>
-        </ol>
-       <div class="ms-4 h3 info_number flex_center_col">
+        <div *ngIf="!this.authorizationService.checkIfUserIsAGuest() && !this.authorizationService.checkIsAuthorizedForManipulatingDb()">
+            <ol class="list-inline rating-list" *ngFor="let star of stars; let i= index" style="display: inline-block"> 
+                <li (click)="countStarAndRate(star)" id="{{'starId'+i+product_id}}" [ngClass]="{'selected': (star <= selectedValue)}" 
+                (mouseover)="addClass(star)" (mouseout)="removeClass(star)"> ★
+                </li>
+            </ol>
+        </div>
+       <div class="ms-4 h3 info_number flex_center_col" *ngIf="this.number_of_reviews > 0">
             <span class="mb-1 text-warning">{{this.getCurrentDishRating()}}</span>
             <span style="font-size: 1.3rem;">({{this.number_of_reviews}})</span>
         </div>
