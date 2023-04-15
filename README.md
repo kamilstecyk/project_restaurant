@@ -1,4 +1,4 @@
-# project_restaurant
+# Restaurant Project
 
 During my studies I created many interesting projects in different technologies. One of them, which I find more interesting, was the creation of a web application for restaurants with a content management system. :sunglasses:
 
